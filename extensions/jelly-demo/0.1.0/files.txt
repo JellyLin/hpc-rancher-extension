@@ -1,0 +1,5 @@
+plugin/img/HPC_Dashboard.38381c9e.png
+plugin/img/generic-catalog.99bdaecf.svg
+plugin/jelly-demo-0.1.0.umd.min.js
+plugin/jelly-demo-0.1.0.umd.min.js.map
+plugin/package.json
