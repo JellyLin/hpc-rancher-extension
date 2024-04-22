@@ -7,17 +7,17 @@ entries:
       catalog.cattle.io/namespace: cattle-ui-plugin-system
       catalog.cattle.io/os: linux
       catalog.cattle.io/permits-os: linux, windows
-      catalog.cattle.io/rancher-version: '>= v2.8.3'
+      catalog.cattle.io/rancher-version: '>= v2.7.7'
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-04-19T09:24:37.93839372Z"
+    created: "2024-04-22T03:06:39.537126026Z"
     description: jelly-demo plugin
-    digest: 6bbcd6f5046f181924dcddf343a2cf38cae73b1dfaa0f54561f3fe1dfd77cbe2
+    digest: 78debbb151e1a175816118b6aea524b701a642c293b5a37970b99d28bf37183c
     name: jelly-demo
     type: application
     urls:
     - assets/jelly-demo/jelly-demo-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-19T09:24:37.938065898Z"
+generated: "2024-04-22T03:06:39.536599623Z"
