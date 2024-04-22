@@ -13,7 +13,7 @@ export default function(plugin: IPlugin): void {
 
   // Load a product
   // plugin.addProduct(require('./product'));
-  
+
   plugin.addRoute({
     name:      'hpcDashboard',
     path:      '/hpc',
