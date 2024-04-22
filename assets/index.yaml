@@ -1,5 +1,26 @@
 apiVersion: v1
 entries:
+  clock:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.2.0
+    created: "2024-04-22T09:04:17.445938229Z"
+    description: Adds a new feature to the top-level menu that shows a full-page clock
+    digest: 379b520afb633132098d9898aa7e74eff4137df43099049bb7fed1bf4f5c25c0
+    icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
+    name: clock
+    type: application
+    urls:
+    - assets/clock/clock-0.2.0.tgz
+    version: 0.2.0
   jelly-demo:
   - annotations:
       catalog.cattle.io/certified: rancher
@@ -12,12 +33,12 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-04-22T03:06:39.537126026Z"
+    created: "2024-04-22T09:04:17.446123742Z"
     description: jelly-demo plugin
-    digest: 78debbb151e1a175816118b6aea524b701a642c293b5a37970b99d28bf37183c
+    digest: 1cf75c305fc3146c4df3d079d1d9e79fe4265fa731b73df5f8f18e6a7b79d028
     name: jelly-demo
     type: application
     urls:
     - assets/jelly-demo/jelly-demo-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-22T03:06:39.536599623Z"
+generated: "2024-04-22T09:04:17.44527802Z"
