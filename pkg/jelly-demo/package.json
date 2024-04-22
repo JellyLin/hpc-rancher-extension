@@ -5,7 +5,7 @@
   "private": false,
   "rancher": {
     "annotations": {
-      "catalog.cattle.io/rancher-version": ">= v2.7.7"
+      "catalog.cattle.io/rancher-version": ">= 2.7.7"
     }
   },
   "scripts": {
