@@ -1,6 +1,6 @@
 annotations:
   catalog.cattle.io/certified: rancher
-  catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.29.0-0'
+  catalog.cattle.io/kube-version: '>= 1.16.0-0'
   catalog.cattle.io/namespace: cattle-ui-plugin-system
   catalog.cattle.io/os: linux
   catalog.cattle.io/permits-os: linux, windows
@@ -13,3 +13,5 @@ description: jelly-demo plugin
 name: jelly-demo
 type: application
 version: 0.1.0
+icon: >-
+  https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
