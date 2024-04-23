@@ -45,6 +45,26 @@ entries:
   jelly-demo:
   - annotations:
       catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.2.0
+    created: "2024-04-23T09:22:59.867668377Z"
+    description: jelly-demo plugin
+    digest: 7fd5934bb89a1fa2ac445d60fc338ed7b86699adaa57a50e175a442b0e9fb4d1
+    icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
+    name: jelly-demo
+    type: application
+    urls:
+    - https://github.com/JellyLin/hpc-rancher-extension/releases/download/jelly-demo-0.2.0/jelly-demo-0.2.0.tgz
+    version: 0.2.0
+  - annotations:
+      catalog.cattle.io/certified: rancher
       catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.29.0-0'
       catalog.cattle.io/namespace: cattle-ui-plugin-system
       catalog.cattle.io/os: linux
@@ -62,4 +82,4 @@ entries:
     urls:
     - assets/jelly-demo/jelly-demo-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-23T03:58:06.398168637Z"
+generated: "2024-04-23T09:22:59.867683706Z"
