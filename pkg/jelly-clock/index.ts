@@ -1,6 +1,7 @@
 import { importTypes } from '@rancher/auto-import';
 import { IPlugin } from '@shell/core/types';
-import NewFeature from './NewFeature.vue';
+import HpcDashboardComponent from './HpcDashboardComponent.vue';
+import HpcAppCenter from './HpcAppCenter.vue';
 
 // Init the package
 export default function(plugin: IPlugin) {
@@ -11,11 +12,15 @@ export default function(plugin: IPlugin) {
   plugin.metadata = require('./package.json');
 
   // Load a product
-  plugin.addProduct(require('./product'));
+  plugin.addRoute({
+    name:      'hpcDashboard',
+    path:      '/hpc',
+    component: HpcDashboardComponent
+  });
 
   plugin.addRoute({
-    name:      'clock',
-    path:      '/clock',
-    component: NewFeature
+    name:      'HpcAppCenter',
+    path:      '/appcenter',
+    component: HpcAppCenter
   });
 }
