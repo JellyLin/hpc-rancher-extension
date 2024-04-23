@@ -1,0 +1,3 @@
+plugin/jelly-clock-0.2.0.umd.min.js
+plugin/jelly-clock-0.2.0.umd.min.js.map
+plugin/package.json

@@ -12,14 +12,35 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-04-22T09:26:01.006506977Z"
+    created: "2024-04-23T03:57:44.088608061Z"
     description: Adds a new feature to the top-level menu that shows a full-page clock
-    digest: 95003b7ad76f69383c540731755c80b6c376dd055b164ae25d6e1e721f1d9c24
+    digest: cb8b90a7f039ad2c5bcefb3b555f60ad6284e827826104a8dce17a263e63e886
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: clock
     type: application
     urls:
     - assets/clock/clock-0.2.0.tgz
+    version: 0.2.0
+  jelly-clock:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.2.0
+    created: "2024-04-23T03:57:44.088820636Z"
+    description: Adds a new feature to the top-level menu that shows a full-page clock
+    digest: 956f2470ae5779e7ab965b14dac1b153beb8d8ca7606bac8dc7a77262bdc4dfd
+    icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
+    name: jelly-clock
+    type: application
+    urls:
+    - assets/jelly-clock/jelly-clock-0.2.0.tgz
     version: 0.2.0
   jelly-demo:
   - annotations:
@@ -33,13 +54,13 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-04-22T09:26:01.006720656Z"
+    created: "2024-04-23T03:57:44.089009518Z"
     description: jelly-demo plugin
-    digest: 65c832882c75cca5bc5c67139bbbdbb84e6a9ab833b512654d513845b07f5a0c
+    digest: b1d4933bf64a8f5c4862b5e1e751d8c69c1ff71ab97a5f43ce27e08d7e50546e
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: jelly-demo
     type: application
     urls:
     - assets/jelly-demo/jelly-demo-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-22T09:26:01.00582196Z"
+generated: "2024-04-23T03:57:44.087574513Z"
