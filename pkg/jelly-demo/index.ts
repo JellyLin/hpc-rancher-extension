@@ -4,7 +4,7 @@ import HpcDashboardComponent from './HpcDashboardComponent.vue';
 import HpcAppCenter from './HpcAppCenter.vue';
 
 // Init the package
-export default function(plugin: IPlugin): void {
+export default function(plugin: IPlugin) {
   // Auto-import model, detail, edit from the folders
   importTypes(plugin);
 
