@@ -12,9 +12,9 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-04-23T05:14:51.709281563Z"
+    created: "2024-04-23T09:22:33.707003466Z"
     description: Adds a new feature to the top-level menu that shows a full-page clock
-    digest: 0ca2754d88c80f9db7c3d6daae9c78ee02e3e8b7871185ddfacc5afa9fbb212a
+    digest: 8ec03af2605fbda9067494e7bd94b337cfa7bf375fa1e8a0c744a20d9d36a4a4
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: clock
     type: application
@@ -33,9 +33,9 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-04-23T05:14:51.709476948Z"
+    created: "2024-04-23T09:22:33.707194565Z"
     description: Adds a new feature to the top-level menu that shows a full-page clock
-    digest: 0864ef1c8408244e4a8c814a90a2ad2dba1a5d4bde2f2706923520d9f4ae0888
+    digest: e3ff27b498a77527afaa8b41cdb69b877d6fd1f5d1cbbcb306bed208ca33c826
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: jelly-clock
     type: application
@@ -53,14 +53,33 @@ entries:
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-04-23T05:14:51.709666152Z"
+    appVersion: 0.2.0
+    created: "2024-04-23T09:22:33.707384712Z"
     description: jelly-demo plugin
-    digest: 99439f2999d7b41ae7885851de757efd1349eeadf7958ecf19c6449608c5f7f9
+    digest: 0b604ec6de755d57fe77d49b5d2f0636c4a446ebb348decef61b2855da4e9406
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
+    name: jelly-demo
+    type: application
+    urls:
+    - assets/jelly-demo/jelly-demo-0.2.0.tgz
+    version: 0.2.0
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.29.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= v2.8.3'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-04-19T09:24:37.93839372Z"
+    description: jelly-demo plugin
+    digest: 6bbcd6f5046f181924dcddf343a2cf38cae73b1dfaa0f54561f3fe1dfd77cbe2
     name: jelly-demo
     type: application
     urls:
     - assets/jelly-demo/jelly-demo-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-23T05:14:51.70873231Z"
+generated: "2024-04-23T09:22:33.706483422Z"
