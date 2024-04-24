@@ -12,15 +12,35 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-04-23T09:22:33.707003466Z"
+    created: "2024-04-24T08:57:36.093631015Z"
     description: Adds a new feature to the top-level menu that shows a full-page clock
-    digest: 8ec03af2605fbda9067494e7bd94b337cfa7bf375fa1e8a0c744a20d9d36a4a4
+    digest: 1c3ab012486e5bde88c5c959d9a5dfe9b50ee8023baa2d0766af0f77586b69ef
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: clock
     type: application
     urls:
     - assets/clock/clock-0.2.0.tgz
     version: 0.2.0
+  hpc-ui:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.29.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.9.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-04-24T08:57:36.093870211Z"
+    description: hpc-ui plugin
+    digest: 411f5067bcf739b20175ffd148ee339f712a8de63008dc851bd40581cde0f636
+    name: hpc-ui
+    type: application
+    urls:
+    - assets/hpc-ui/hpc-ui-0.1.0.tgz
+    version: 0.1.0
   jelly-clock:
   - annotations:
       catalog.cattle.io/certified: rancher
@@ -33,9 +53,9 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-04-23T09:22:33.707194565Z"
+    created: "2024-04-24T08:57:36.094069642Z"
     description: Adds a new feature to the top-level menu that shows a full-page clock
-    digest: e3ff27b498a77527afaa8b41cdb69b877d6fd1f5d1cbbcb306bed208ca33c826
+    digest: 12f05938898be94240758043617f621a41f192c1434122ac53c1c1e1226c99c0
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: jelly-clock
     type: application
@@ -54,9 +74,9 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-04-23T09:22:33.707384712Z"
+    created: "2024-04-24T08:57:36.094280445Z"
     description: jelly-demo plugin
-    digest: 0b604ec6de755d57fe77d49b5d2f0636c4a446ebb348decef61b2855da4e9406
+    digest: 88fde51f930e3494fe4a78cd6e279c7f94e60ba0798f838998efde1e70ee8058
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: jelly-demo
     type: application
@@ -82,4 +102,4 @@ entries:
     urls:
     - assets/jelly-demo/jelly-demo-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-23T09:22:33.706483422Z"
+generated: "2024-04-24T08:57:36.092641605Z"
