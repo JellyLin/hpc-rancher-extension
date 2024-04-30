@@ -13,14 +13,24 @@ const CUSTOM_PAGE_NAME = 'Jobs';
 const CUSTOM_PAGE_NAME_2 = 'File explorer';
 const CUSTOM_PAGE_NAME_3 = 'Summary';
 const CUSTOM_PAGE_NAME_4 = 'Settings';
+const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
 
 const routes = [
   // this covers the "custom page"
   {
+    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
+    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ YOUR_K8S_RESOURCE_NAME }`,
+    component: ListResource,
+    meta:      { product: YOUR_PRODUCT_NAME },
+  },
+  {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME }`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME }`,
-    component: HpcAppCenter,
-    meta:      { product: YOUR_PRODUCT_NAME },
+    component: ListResource,
+    meta:      { 
+      product:  YOUR_PRODUCT_NAME,
+      resource: YOUR_K8S_RESOURCE_NAME,
+    },
   },
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_2 }`,
@@ -40,32 +50,32 @@ const routes = [
     component: HpcAppCenter,
     meta:      { product: YOUR_PRODUCT_NAME },
   },
-  // the following routes cover the "resource page"
-  // registering routes for list/edit/create views
-  {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource`,
-    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource`,
-    component: ListResource,
-    meta:      { product: YOUR_PRODUCT_NAME },
-  },
-  {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-create`,
-    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/create`,
-    component: CreateResource,
-    meta:      { product: YOUR_PRODUCT_NAME },
-  },
-  {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-id`,
-    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:id`,
-    component: ViewResource,
-    meta:      { product: YOUR_PRODUCT_NAME },
-  },
-  {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-namespace-id`,
-    path:      `/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:namespace/:id`,
-    component: ViewNamespacedResource,
-    meta:      { product: YOUR_PRODUCT_NAME },
-  }
+  // // the following routes cover the "resource page"
+  // // registering routes for list/edit/create views
+  // {
+  //   name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource`,
+  //   path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource`,
+  //   component: ListResource,
+  //   meta:      { product: YOUR_PRODUCT_NAME },
+  // },
+  // {
+  //   name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-create`,
+  //   path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/create`,
+  //   component: CreateResource,
+  //   meta:      { product: YOUR_PRODUCT_NAME },
+  // },
+  // {
+  //   name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-id`,
+  //   path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:id`,
+  //   component: ViewResource,
+  //   meta:      { product: YOUR_PRODUCT_NAME },
+  // },
+  // {
+  //   name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-namespace-id`,
+  //   path:      `/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:namespace/:id`,
+  //   component: ViewNamespacedResource,
+  //   meta:      { product: YOUR_PRODUCT_NAME },
+  // }
 ];
 
 export default routes;
