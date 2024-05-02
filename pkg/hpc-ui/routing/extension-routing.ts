@@ -4,6 +4,7 @@ import CreateResource from '@shell/pages/c/_cluster/_product/_resource/create.vu
 import ViewResource from '@shell/pages/c/_cluster/_product/_resource/_id.vue';
 import ViewNamespacedResource from '@shell/pages/c/_cluster/_product/_resource/_namespace/_id.vue';
 import HpcAppCenter from '../pages/HpcAppCenter.vue';
+import HpcJobIndex from '../pages/HpcJobIndex.vue';
 
 // to achieve naming consistency throughout the extension
 // we recommend this to be defined on a config file and exported
@@ -20,7 +21,7 @@ const routes = [
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ YOUR_K8S_RESOURCE_NAME }`,
-    component: ListResource,
+    component: HpcJobIndex,
     meta:      { product: YOUR_PRODUCT_NAME },
   },
   {
