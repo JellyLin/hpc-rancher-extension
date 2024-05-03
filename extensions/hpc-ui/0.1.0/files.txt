@@ -1,1 +1,6 @@
+plugin/hpc-ui-0.1.0.umd.min.1.js
+plugin/hpc-ui-0.1.0.umd.min.1.js.map
+plugin/hpc-ui-0.1.0.umd.min.js
+plugin/hpc-ui-0.1.0.umd.min.js.map
+plugin/img/generic-catalog.99bdaecf.svg
 plugin/package.json
