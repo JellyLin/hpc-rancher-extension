@@ -4,13 +4,13 @@ import CreateResource from '@shell/pages/c/_cluster/_product/_resource/create.vu
 import ViewResource from '@shell/pages/c/_cluster/_product/_resource/_id.vue';
 import ViewNamespacedResource from '@shell/pages/c/_cluster/_product/_resource/_namespace/_id.vue';
 import HpcAppCenter from '../pages/HpcAppCenter.vue';
-import HpcJobIndex from '../pages/HpcJobIndex.vue';
+import HpcJobTable from '../list/batch.volcano.sh.job.vue';
 
 // to achieve naming consistency throughout the extension
 // we recommend this to be defined on a config file and exported
 // so that the developer can import it wherever it needs to be used
 const YOUR_PRODUCT_NAME = 'HPC';
-const CUSTOM_PAGE_NAME = 'Jobs';
+const CUSTOM_PAGE_NAME = 'VolcanoJobs';
 const CUSTOM_PAGE_NAME_2 = 'File explorer';
 const CUSTOM_PAGE_NAME_3 = 'Summary';
 const CUSTOM_PAGE_NAME_4 = 'Settings';
@@ -18,17 +18,20 @@ const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
 
 const routes = [
   // this covers the "custom page"
-  {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
-    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ YOUR_K8S_RESOURCE_NAME }`,
-    component: HpcJobIndex,
-    meta:      { product: YOUR_PRODUCT_NAME },
-  },
+  // {
+  //   name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME }`,
+  //   path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME }`,
+  //   component: HpcJobResourceList,
+  //   meta:      {
+  //     product:  YOUR_PRODUCT_NAME,
+  //     resource: YOUR_K8S_RESOURCE_NAME,
+  //   },
+  // },
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME }`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME }`,
-    component: ListResource,
-    meta:      { 
+    component: HpcJobTable,
+    meta:      {
       product:  YOUR_PRODUCT_NAME,
       resource: YOUR_K8S_RESOURCE_NAME,
     },
