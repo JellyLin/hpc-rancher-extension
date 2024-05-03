@@ -15,4 +15,7 @@ export default function(plugin: IPlugin): void {
 
   // Add Vue Routes
   plugin.addRoutes(extensionRouting);
+
+  // Add the new locale
+  // plugin.addLocale('en-us', 'US English');
 }
