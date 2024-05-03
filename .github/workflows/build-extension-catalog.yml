@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - Release
+      - main
   pull_request:
     branches:
-      - Release
+      - main
 
 defaults:
   run:
