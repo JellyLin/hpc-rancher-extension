@@ -22,13 +22,10 @@ const routes = [
   //   },
   // },
   {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME }`,
-    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME }`,
+    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
+    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ YOUR_K8S_RESOURCE_NAME }`,
     component: HpcJobTable,
-    meta:      {
-      product:  YOUR_PRODUCT_NAME,
-      resource: YOUR_K8S_RESOURCE_NAME,
-    },
+    meta:      { product: YOUR_PRODUCT_NAME },
   },
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_2 }`,

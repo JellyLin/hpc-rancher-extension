@@ -12,7 +12,8 @@ export function init($plugin: IPlugin, store: any) {
 
   const {
     product,
-    virtualType,
+    configureType,
+    // virtualType,
     basicType
   } = $plugin.DSL(store, YOUR_PRODUCT_NAME);
 
@@ -23,7 +24,7 @@ export function init($plugin: IPlugin, store: any) {
     weight:  96.1,
     to: {
       // name:   `${ YOUR_PRODUCT_NAME }-c-cluster-resource`,
-      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME }`,
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
       params: {
         product:  YOUR_PRODUCT_NAME,
         resource: YOUR_K8S_RESOURCE_NAME
@@ -32,15 +33,29 @@ export function init($plugin: IPlugin, store: any) {
   });
 
   // // defining a k8s resource as page
-  // configureType(YOUR_K8S_RESOURCE_NAME, {
-  //   displayName: 'Volcano Jobs',
-  //   isCreatable: true,
-  //   isEditable:  true,
-  //   isRemovable: true,
-  //   showAge:     true,
-  //   showState:   true,
-  //   canYaml:     true,
-  //   customRoute: {
+  configureType(YOUR_K8S_RESOURCE_NAME, {
+    displayName: 'Volcano Jobs',
+    isCreatable: true,
+    isEditable:  true,
+    isRemovable: true,
+    showAge:     true,
+    showState:   true,
+    canYaml:     true,
+    customRoute: {
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
+      params: {
+        product:  YOUR_PRODUCT_NAME,
+        resource: YOUR_K8S_RESOURCE_NAME
+      }
+    }
+  });
+
+  // creating a custom page
+  // virtualType({
+  //   labelKey: 'some.translation.key',
+  //   name:     CUSTOM_PAGE_NAME,
+  //   weight:   9,
+  //   route:    {
   //     name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
   //     params: {
   //       product:  YOUR_PRODUCT_NAME,
@@ -48,20 +63,6 @@ export function init($plugin: IPlugin, store: any) {
   //     }
   //   }
   // });
-
-  // creating a custom page
-  virtualType({
-    labelKey: 'some.translation.key',
-    name:     CUSTOM_PAGE_NAME,
-    weight:   9,
-    route:    {
-      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME }`,
-      params: {
-        product:  YOUR_PRODUCT_NAME,
-        resource: YOUR_K8S_RESOURCE_NAME
-      }
-    }
-  });
 
   // registering the defined pages as side-menu entries
   // basicType([YOUR_K8S_RESOURCE_NAME, CUSTOM_PAGE_NAME, CUSTOM_PAGE_NAME_2, CUSTOM_PAGE_NAME_3]);
