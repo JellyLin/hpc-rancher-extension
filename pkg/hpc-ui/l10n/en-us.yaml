@@ -1,6 +1,0 @@
-typeLabel:
-  batch.volcano.sh.job: |-
-  {count, plural,
-    one { Volcano Job }
-    other { Volcano Jobs }
-  }
