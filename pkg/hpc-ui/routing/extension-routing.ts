@@ -1,6 +1,6 @@
 // ./routing/extension-routing.ts
 import HpcAppCenter from '../pages/HpcAppCenter.vue';
-import HpcJobTable from '../list/batch.volcano.sh.job.vue';
+import HpcJobTable from '../list/HpcJobTable.vue';
 
 // to achieve naming consistency throughout the extension
 // we recommend this to be defined on a config file and exported
