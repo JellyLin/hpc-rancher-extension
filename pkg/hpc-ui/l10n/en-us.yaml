@@ -1,0 +1,10 @@
+hpc:
+  productLabel: 'HPC'
+  tableHeaders:
+    tasks: Tasks
+    containers: Containers
+    plugins: Plugins
+    volumes: Volumes
+    runningDuration: runningDuration
+    queue: Queue
+    open: open
