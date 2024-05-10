@@ -34,7 +34,7 @@ export function init($plugin: IPlugin, store: any) {
 
   // // defining a k8s resource as page
   configureType(YOUR_K8S_RESOURCE_NAME, {
-    displayName: 'Volcano Jobs',
+    displayName: 'Volcano Jobs 234',
     isCreatable: true,
     isEditable:  true,
     isRemovable: true,
