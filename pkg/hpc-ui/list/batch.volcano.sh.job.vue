@@ -45,7 +45,7 @@ export default {
           labelKey: 'hpc.tableHeaders.tasks',
           search:   ['tasks'],
           // value:    'tasks', // spec.tasks
-          getValue:  (row) => row.spec.tasks.length,
+          getValue:  'spec.tasks.length',
         },
         {
           name:      'containers',
@@ -67,9 +67,6 @@ export default {
           labelKey:  'hpc.tableHeaders.plugins',
           search:   ['plugins'],
           value:     'spec.plugins', // .spec.plugins
-          getValue:  (row) => {
-            return row.plugins.length;
-          },
         },
         {
           name:      'volumes',
@@ -163,18 +160,8 @@ export default {
     >
       <template
         slot="cell:console"
-        slot-scope="scope"
       >
         <div class="name-console">
-          <LinkDetail
-            v-if="true"
-            v-model="scope.row.metadata.name"
-            :row="scope.row"
-          />
-          <span v-else>
-            {{ scope.row.metadata.name }}
-          </span>
-
           <div class="overview-web-console">
             <ButtonDropdown
               button-label="Console"

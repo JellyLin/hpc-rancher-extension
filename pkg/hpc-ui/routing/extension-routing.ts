@@ -1,6 +1,6 @@
 // ./routing/extension-routing.ts
 import HpcAppCenter from '../pages/HpcAppCenter.vue';
-import HpcJobTable from '../list/HpcJobTable.vue';
+import VolcanoJobTable from '../list/batch.volcano.sh.job.vue';
 
 // to achieve naming consistency throughout the extension
 // we recommend this to be defined on a config file and exported
@@ -24,11 +24,8 @@ const routes = [
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ YOUR_K8S_RESOURCE_NAME }`,
-    component: HpcJobTable,
-    meta:      {
-      product:  YOUR_PRODUCT_NAME,
-      resource: YOUR_K8S_RESOURCE_NAME,
-    },
+    component: VolcanoJobTable,
+    meta:      { product: YOUR_PRODUCT_NAME },
   },
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_2 }`,
