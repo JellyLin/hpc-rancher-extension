@@ -1,6 +1,9 @@
 // ./routing/extension-routing.ts
 import HpcAppCenter from '../pages/HpcAppCenter.vue';
 import VolcanoJobTable from '../list/batch.volcano.sh.job.vue';
+import CreateResource from '@shell/pages/c/_cluster/_product/_resource/create.vue';
+import ViewResource from '@shell/pages/c/_cluster/_product/_resource/_id.vue';
+import ViewNamespacedResource from '@shell/pages/c/_cluster/_product/_resource/_namespace/_id.vue';
 
 // to achieve naming consistency throughout the extension
 // we recommend this to be defined on a config file and exported
@@ -28,11 +31,29 @@ const routes = [
     meta:      { product: YOUR_PRODUCT_NAME },
   },
   {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_2 }`,
-    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME_2 }`,
-    component: HpcAppCenter,
+    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-create`,
+    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/create`,
+    component: CreateResource,
     meta:      { product: YOUR_PRODUCT_NAME },
   },
+  {
+    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-id`,
+    path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:id`,
+    component: ViewResource,
+    meta:      { product: YOUR_PRODUCT_NAME },
+  },
+  {
+    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-namespace-id`,
+    path:      `/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:namespace/:id`,
+    component: ViewNamespacedResource,
+    meta:      { product: YOUR_PRODUCT_NAME },
+  },
+  // {
+  //   name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_2 }`,
+  //   path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME_2 }`,
+  //   component: HpcAppCenter,
+  //   meta:      { product: YOUR_PRODUCT_NAME },
+  // },
 ];
 
 export default routes;

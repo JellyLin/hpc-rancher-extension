@@ -9,7 +9,7 @@ import ResourceFetch from '@shell/mixins/resource-fetch';
 const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
 
 export default {
-  name:       'VolcanoJobs556',
+  name:       'VolcanoJobs',
   components: {
     ResourceTable,
     Masthead,
