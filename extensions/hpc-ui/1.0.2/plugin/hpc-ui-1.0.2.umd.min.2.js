@@ -1,0 +1,2 @@
+(("undefined"!==typeof self?self:this)["webpackJsonphpc_ui_1_0_2"]=("undefined"!==typeof self?self:this)["webpackJsonphpc_ui_1_0_2"]||[]).push([[2],{"1bb6":function(e,n){const s=[{hpc:{productLabel:"HPC",tableHeaders:{tasks:"Tasks",containers:"Containers",plugins:"Plugins",volumes:"Volumes",runningDuration:"runningDuration",queue:"Queue",open:"open"}}}];e.exports=s.length<=1?s[0]:s}}]);
+//# sourceMappingURL=hpc-ui-1.0.2.umd.min.2.js.map
