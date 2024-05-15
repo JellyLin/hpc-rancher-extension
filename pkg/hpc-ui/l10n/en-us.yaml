@@ -7,4 +7,5 @@ hpc:
     volumes: Volumes
     runningDuration: runningDuration
     queue: Queue
-    open: open
+    open: Open
+    status: Status
