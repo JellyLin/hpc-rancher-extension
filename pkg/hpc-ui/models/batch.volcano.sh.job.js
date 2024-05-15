@@ -24,7 +24,7 @@ export default class VolcanoJob extends SteveModel {
     });
   }
 
-  get containers() {
+  get containersCount() {
     let cnt = 0;
 
     this.spec.tasks.map((task) => {
@@ -39,7 +39,7 @@ export default class VolcanoJob extends SteveModel {
 
     for (const plugin in this.spec.plugins) {
       if ( this.spec.plugins[plugin].length > 0 ) {
-        plugins.append(plugin);
+        plugins.push(plugin);
       }
     }
 
