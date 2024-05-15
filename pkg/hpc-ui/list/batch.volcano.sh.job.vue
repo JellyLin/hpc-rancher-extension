@@ -2,11 +2,21 @@
 import ResourceTable from '@shell/components/ResourceTable';
 import Masthead from '@shell/components/ResourceList/Masthead';
 import ButtonDropdown from '@shell/components/ButtonDropdown';
-import { STATE, NAME, AGE } from '@shell/config/table-headers';
-import { LOGGING } from '@shell/config/types';
+import { STATE, NAME, STATUS, AGE } from '@shell/config/table-headers';
+import { LOGGING, SCHEMA } from '@shell/config/types';
 import ResourceFetch from '@shell/mixins/resource-fetch';
 
 const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
+
+const schema = {
+  id:         YOUR_K8S_RESOURCE_NAME,
+  type:       SCHEMA,
+  attributes: {
+    kind:       'volcanoJob',
+    namespaced: true
+  },
+  metadata: { name: 'volcanoJob' },
+};
 
 export default {
   name:       'VolcanoJobs',
@@ -41,38 +51,34 @@ export default {
         STATE,
         NAME,
         {
+          name:     'status',
+          labelKey:   'hpc.tableHeaders.status',
+          value:    'status.state.phase',
+          getValue: row => row.status?.state?.phase
+        },
+        {
           name:     'tasks',
           labelKey: 'hpc.tableHeaders.tasks',
           search:   ['tasks'],
-          // value:    'tasks', // spec.tasks
-          getValue:  'spec.tasks.length',
+          value:    'spec.tasks.length',
         },
         {
           name:      'containers',
           labelKey:  'hpc.tableHeaders.containers',
-          // value:     'containers', // .spec.tasks[].template.spec.containers[]
+          value:     'containersCount', // .spec.tasks[].template.spec.containers[]
           width:     130,
-          getValue:  (row) => {
-            let cnt = 0;
-
-            row.spec.tasks.map((task) => {
-              cnt += task.template.spec.containers.length;
-            });
-
-            return cnt;
-          },
         },
         {
           name:      'plugins',
           labelKey:  'hpc.tableHeaders.plugins',
           search:   ['plugins'],
-          value:     'spec.plugins', // .spec.plugins
+          value:     'pluginsDisplay', // .spec.plugins
         },
         {
           name:      'volumes',
           labelKey:  'hpc.tableHeaders.volumes',
           search:   ['.spec.volumes'],
-          value:     'spec.volumes',
+          value:     'spec.volumes.length',
         },
         {
           name:      'runningDuration',
@@ -104,18 +110,13 @@ export default {
         name:   'c-cluster-product-resource-create',
         params: {
           product:  this.$store.getters['currentProduct'].name,
-          resource: this.schema.id,
+          resource: YOUR_K8S_RESOURCE_NAME,
         },
       };
     },
     canCreateCluster() {
-      const schema = this.$store.getters['management/schemaFor'](YOUR_K8S_RESOURCE_NAME);
-
-      return !!schema?.collectionMethods.find((x) => x.toLowerCase() === 'post');
+      return true;
     },
-  //   filteredRows() {
-  //     return this.rows;
-  //   },
   },
 
   async fetch() {
@@ -124,9 +125,6 @@ export default {
     this.$fetchType(LOGGING.CLUSTER_OUTPUT);
 
     this.resources = await this.$fetchType(YOUR_K8S_RESOURCE_NAME);
-    this.schema = this.$store.getters['management/schemaFor'](YOUR_K8S_RESOURCE_NAME);
-    // this.schema = this.$store.getters['type-map/headersFor'](YOUR_K8S_RESOURCE_NAME);
-    console.log(this);
   },
 };
 </script>
