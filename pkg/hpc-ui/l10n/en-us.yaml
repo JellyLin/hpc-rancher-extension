@@ -9,3 +9,11 @@ hpc:
     queue: Queue
     open: Open
     status: Status
+  jobs:
+    title: Valcano Jobs
+  summary:
+    title: Summary
+  explorer:
+    title: File Explorer
+  settings:
+    title: Settings
