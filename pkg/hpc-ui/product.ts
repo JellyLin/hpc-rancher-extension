@@ -89,7 +89,7 @@ export function init($plugin: IPlugin, store: any) {
   basicType([
     CUSTOM_PAGE_NAME,
     CUSTOM_PAGE_NAME_2,
-    CUSTOM_PAGE_NAME_3,
-    CUSTOM_PAGE_NAME_4,
+    // CUSTOM_PAGE_NAME_3,
+    // CUSTOM_PAGE_NAME_4,
   ]);
 }
