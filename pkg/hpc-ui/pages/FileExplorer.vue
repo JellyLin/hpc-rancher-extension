@@ -48,7 +48,6 @@ export default {
       <li>3. Decrypt user name token</li>
       <li>>4. EonOne 可由這user name 透過系統查uid</li>
       <li>5. Get GSx FileExplorer login token</li>
-      <li>6. Redirect UI to GSx FileExplorer with token</li>
       <li><a :href="`http://172.24.110.128:8989?token=abc&username=${principal.loginName}`" target="_blank">6. Redirect UI to GSx FileExplorer with token</a></li>
     </ul>
   </div>
