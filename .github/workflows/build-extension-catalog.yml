@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - demo_202405
   pull_request:
     branches:
-      - main
+      - demo_202405
 
 defaults:
   run:
