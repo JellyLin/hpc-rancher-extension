@@ -9,3 +9,5 @@ hpc:
     queue: Queue
     open: Open
     status: Status
+  console:
+    novnc: Open with VNC

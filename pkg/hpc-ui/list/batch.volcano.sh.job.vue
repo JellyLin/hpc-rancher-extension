@@ -5,6 +5,7 @@ import ButtonDropdown from '@shell/components/ButtonDropdown';
 import { STATE, NAME, STATUS, AGE } from '@shell/config/table-headers';
 import { LOGGING, SCHEMA } from '@shell/config/types';
 import ResourceFetch from '@shell/mixins/resource-fetch';
+import { allHash } from '@shell/utils/promise';
 
 const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
 
@@ -41,6 +42,7 @@ export default {
     return {
       resource:  YOUR_K8S_RESOURCE_NAME,
       resources: [],
+      services: [],
       schema,
     };
   },
@@ -117,12 +119,67 @@ export default {
     canCreateCluster() {
       return true;
     },
+    isOff() {
+      return this.resource.stateDisplay === `Pending`;
+    },
+    options() {
+      return [
+        {
+          label: this.t('hpc.console.novnc'),
+          value: 'vnc'
+        },
+        // {
+        //   label: this.t('harvester.virtualMachine.console.serial'),
+        //   value: 'serial'
+        // }
+      ];
+    }
+  },
+
+  methods: {
+    handleDropdown(e, row) {
+      this.show(row);
+    },
+    show(row) {
+      let host = ``;
+      let port = ``;
+
+      this.services.forEach((s) => {
+        if (s.metadata.name === 'gatkvnc' && s.metadata.namespace === row.namespace) {
+          host = s.spec.loadBalancerIP;
+          if (s.spec.ports.length > 0) {
+            s.spec.ports.forEach((p) => {
+              if (p.name === 'novnc') {
+                port = p.targetPort;
+              }
+            });
+          }
+        }
+      });
+      const url = `https://${ host }:${ port }`;
+
+      if (host !== `` && port !== ``) {
+        window.open(
+          url,
+          '_blank',
+          'toolbars=0,width=900,height=700,left=0,top=0,noreferrer'
+        );
+      } else {
+        console.error(`Can NOT find Service IP or port`);
+      }
+    },
   },
 
   async fetch() {
     console.log(this);
+    const inStore = this.$store.getters['currentProduct'].inStore;
+
     this.$initializeFetchData(YOUR_K8S_RESOURCE_NAME);
     this.$fetchType(LOGGING.CLUSTER_OUTPUT);
+
+    if (this.$store.getters[`${ inStore }/schemaFor`]('Service')) {
+      this.services = await this.$fetchType(`Service`);
+    }
 
     this.resources = await this.$fetchType(YOUR_K8S_RESOURCE_NAME);
   },
@@ -156,19 +213,20 @@ export default {
       :use-query-params-for-simple-filtering="useQueryParamsForSimpleFiltering"
       :force-update-live-and-delayed="forceUpdateLiveAndDelayed"
     >
-      <template
+      <!-- <template
         slot="cell:console"
-      >
+      > -->
+      <template #cell:console="{row}">
         <div class="name-console">
           <div class="overview-web-console">
             <ButtonDropdown
               button-label="Console"
               size="sm"
+              :disabled="isOff"
+              :no-drop="isOff"
+              :dropdown-options="options"
+              @click-action="e=>handleDropdown(e, row)"
             />
-            <!-- :disabled="isOff"
-              :no-drop="isOff" -->
-            <!-- :dropdown-options="options" -->
-            <!-- @click-action="handleDropdown" -->
           </div>
         </div>
       </template>
