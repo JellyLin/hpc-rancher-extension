@@ -48,6 +48,7 @@ export default {
       resources: [],
       services:  [],
       ingresses: [],
+      pods:      [],
       schema,
     };
   },
@@ -186,7 +187,12 @@ export default {
           'toolbars=0,width=900,height=700,left=0,top=0,noreferrer'
         );
       } else {
-        console.error(`Can NOT find Service IP or port`);
+        if (OpenWithIngress) {
+          console.error(`Can NOT find Ingress URL to open`);
+        }
+        if (OpenWithSerivce) {
+          console.error(`Can NOT find Service IP or port`);
+        }
         // build
       }
     },
@@ -208,6 +214,10 @@ export default {
       if (this.$store.getters[`${ inStore }/schemaFor`](INGRESS)) {
         this.ingresses = await this.$fetchType(INGRESS);
       }
+    }
+    
+    if (this.$store.getters[`${ inStore }/schemaFor`](`Pod`)) {
+      this.pods = await this.$fetchType(`Pod`);
     }
 
     this.resources = await this.$fetchType(YOUR_K8S_RESOURCE_NAME);

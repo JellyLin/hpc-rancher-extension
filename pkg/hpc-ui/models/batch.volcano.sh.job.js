@@ -90,4 +90,26 @@ export default class VolcanoJob extends SteveModel {
       total:   1,
     };
   }
+
+  get podResource() {
+    const podList = this.$rootGetters['harvester/all'](`Pod`);
+    const vcjobName = this.name;
+    const chartName = this.name;
+
+    return podList.find((P) => {
+      return (
+        `${ vcjobName }-${ chartName }-master-0` === P.metadata?.name
+      );
+    });
+  }
+
+  openLogs() {
+    this.$dispatch('wm/open', {
+      id:        `${ this.id }-logs`,
+      label:     this.metadata.name,
+      icon:      'file',
+      component: 'ContainerLogs',
+      attrs:     { pod: this.podResource }
+    }, { root: true });
+  }
 }
