@@ -8,6 +8,10 @@ import ResourceFetch from '@shell/mixins/resource-fetch';
 import { allHash } from '@shell/utils/promise';
 
 const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
+const INGRESS = 'networking.k8s.io.ingress';
+
+const OpenWithIngress = true;
+const OpenWithSerivce = false;
 
 const schema = {
   id:         YOUR_K8S_RESOURCE_NAME,
@@ -42,7 +46,8 @@ export default {
     return {
       resource:  YOUR_K8S_RESOURCE_NAME,
       resources: [],
-      services: [],
+      services:  [],
+      ingresses: [],
       schema,
     };
   },
@@ -144,21 +149,37 @@ export default {
       let host = ``;
       let port = ``;
 
-      this.services.forEach((s) => {
-        if (s.metadata.name === 'gatkvnc' && s.metadata.namespace === row.namespace) {
-          host = s.spec.loadBalancerIP;
-          if (s.spec.ports.length > 0) {
-            s.spec.ports.forEach((p) => {
-              if (p.name === 'novnc') {
-                port = p.targetPort;
-              }
-            });
-          }
-        }
-      });
-      const url = `https://${ host }:${ port }`;
+      let url = ``;
 
-      if (host !== `` && port !== ``) {
+      if (OpenWithIngress) {
+        this.ingresses.forEach((igs) => {
+          if (url === ``) {
+            if (igs.metadata.namespace === row.namespace) {
+              url = igs.createRulesForListPage()?.[0]?.fullPath;
+            }
+          }
+        });
+      }
+
+      if (OpenWithSerivce) {
+        this.services.forEach((s) => {
+          if (s.metadata.name === 'gatkvnc' && s.metadata.namespace === row.namespace) {
+            host = s.spec.loadBalancerIP;
+            if (s.spec.ports.length > 0) {
+              s.spec.ports.forEach((p) => {
+                if (p.name === 'novnc') {
+                  port = p.targetPort;
+                }
+              });
+            }
+          }
+        });
+        if (host !== `` && port !== ``) {
+          url = `https://${ host }:${ port }`;
+        }
+      }
+
+      if (url !== ``) {
         window.open(
           url,
           '_blank',
@@ -178,8 +199,15 @@ export default {
     this.$initializeFetchData(YOUR_K8S_RESOURCE_NAME);
     this.$fetchType(LOGGING.CLUSTER_OUTPUT);
 
-    if (this.$store.getters[`${ inStore }/schemaFor`]('Service')) {
-      this.services = await this.$fetchType(`Service`);
+    if (OpenWithSerivce) {
+      if (this.$store.getters[`${ inStore }/schemaFor`]('Service')) {
+        this.services = await this.$fetchType(`Service`);
+      }
+    }
+    if (OpenWithIngress) {
+      if (this.$store.getters[`${ inStore }/schemaFor`](INGRESS)) {
+        this.ingresses = await this.$fetchType(INGRESS);
+      }
     }
 
     this.resources = await this.$fetchType(YOUR_K8S_RESOURCE_NAME);
