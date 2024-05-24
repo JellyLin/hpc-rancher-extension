@@ -166,6 +166,7 @@ export default {
         );
       } else {
         console.error(`Can NOT find Service IP or port`);
+        // build
       }
     },
   },
