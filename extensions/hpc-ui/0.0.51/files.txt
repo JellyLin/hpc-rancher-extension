@@ -1,0 +1,7 @@
+plugin/hpc-ui-0.0.51.umd.min.1.js
+plugin/hpc-ui-0.0.51.umd.min.1.js.map
+plugin/hpc-ui-0.0.51.umd.min.2.js
+plugin/hpc-ui-0.0.51.umd.min.2.js.map
+plugin/hpc-ui-0.0.51.umd.min.js
+plugin/hpc-ui-0.0.51.umd.min.js.map
+plugin/package.json
