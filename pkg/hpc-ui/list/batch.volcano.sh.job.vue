@@ -170,8 +170,8 @@ export default {
       }
     }
 
-    if (this.$store.getters[`${ inStore }/schemaFor`](`pod`)) {
-      this.pods = await this.$fetchType(`pod`);
+    if (this.$store.getters[`${ inStore }/schemaFor`](`Pod`)) {
+      this.pods = await this.$fetchType(`Pod`);
     }
 
     this.resources = await this.$fetchType(YOUR_K8S_RESOURCE_NAME);
