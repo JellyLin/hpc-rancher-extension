@@ -1,7 +1,7 @@
 {
   "name": "hpc-ui",
   "description": "hpc-ui plugin",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "private": false,
   "rancher": true,
   "scripts": {
