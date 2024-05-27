@@ -40,7 +40,6 @@ export default {
 
   data() {
     const inStore = this.$store.getters['currentProduct'].inStore;
-    // return !!this.$store.getters[`${ inStore }/schemaFor`](METRIC.NODE);
     const schema = this.$store.getters[`${ inStore }/schemaFor`](YOUR_K8S_RESOURCE_NAME);
 
     return {
@@ -48,6 +47,7 @@ export default {
       resources: [],
       services:  [],
       ingresses: [],
+      pods:      [],
       schema,
     };
   },
@@ -124,9 +124,6 @@ export default {
     canCreateCluster() {
       return true;
     },
-    isOff() {
-      return this.resource.stateDisplay === `Pending`;
-    },
     options() {
       return [
         {
@@ -143,41 +140,7 @@ export default {
 
   methods: {
     handleDropdown(e, row) {
-      this.show(row);
-    },
-    show(row) {
-      let host = ``;
-      let port = ``;
-
-      let url = ``;
-
-      if (OpenWithIngress) {
-        this.ingresses.forEach((igs) => {
-          if (url === ``) {
-            if (igs.metadata.namespace === row.namespace) {
-              url = igs.createRulesForListPage()?.[0]?.fullPath;
-            }
-          }
-        });
-      }
-
-      if (OpenWithSerivce) {
-        this.services.forEach((s) => {
-          if (s.metadata.name === 'gatkvnc' && s.metadata.namespace === row.namespace) {
-            host = s.spec.loadBalancerIP;
-            if (s.spec.ports.length > 0) {
-              s.spec.ports.forEach((p) => {
-                if (p.name === 'novnc') {
-                  port = p.targetPort;
-                }
-              });
-            }
-          }
-        });
-        if (host !== `` && port !== ``) {
-          url = `https://${ host }:${ port }`;
-        }
-      }
+      const url = row.vncURL;
 
       if (url !== ``) {
         window.open(
@@ -185,9 +148,6 @@ export default {
           '_blank',
           'toolbars=0,width=900,height=700,left=0,top=0,noreferrer'
         );
-      } else {
-        console.error(`Can NOT find Service IP or port`);
-        // build
       }
     },
   },
@@ -208,6 +168,10 @@ export default {
       if (this.$store.getters[`${ inStore }/schemaFor`](INGRESS)) {
         this.ingresses = await this.$fetchType(INGRESS);
       }
+    }
+
+    if (this.$store.getters[`${ inStore }/schemaFor`](`Pod`)) {
+      this.pods = await this.$fetchType(`Pod`);
     }
 
     this.resources = await this.$fetchType(YOUR_K8S_RESOURCE_NAME);
@@ -251,8 +215,8 @@ export default {
             <ButtonDropdown
               button-label="Console"
               size="sm"
-              :disabled="isOff"
-              :no-drop="isOff"
+              :disabled="row.isConsoleOff"
+              :no-drop="row.isConsoleOff"
               :dropdown-options="options"
               @click-action="e=>handleDropdown(e, row)"
             />
