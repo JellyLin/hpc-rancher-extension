@@ -5,7 +5,7 @@ import Tabbed from "@shell/components/Tabbed";
 import UnitInput from "@shell/components/form/UnitInput";
 import LabeledInput from "@components/Form/LabeledInput/LabeledInput.vue";
 import Select from "@shell/components/form/Select.vue";
-import AsyncButton from '@shell/components/AsyncButton';
+import AsyncButton from "@shell/components/AsyncButton";
 
 export default {
   name: "HpcInstall",
@@ -23,44 +23,45 @@ export default {
       type: String,
       default: `create`,
     },
-    model: {
-      type: Object,
-      default: () => {
-        return {
-          job: ``,
-          namespace: {
-            opt: `namespace`,
-            list: ["namespace", "default", "test"],
-          },
-          appVer: {
-            opt: `1.0.0`,
-            list: ["1.0.0", "1.1.0"],
-          },
-          command: ``,
-          cmdTemplate: `TEST`,
-          cpu: 0,
-          gpu: 0,
-          node: 0,
-          memory: 0,
-        };
-      },
-    },
-    wait: {
-      type: Object,
-      default: () => {
-        return {
-          hour: 0,
-          min: 0,
-        };
-      },
-    },
   },
   data() {
-    return {};
+    return {
+      model: {
+        job: ``,
+        namespace: {
+          opt: `namespace`,
+          list: ["namespace", "default", "test"],
+        },
+        appVer: {
+          opt: `1.0.0`,
+          list: ["1.0.0", "1.1.0"],
+        },
+        command: ``,
+        cmdTemplate: `TEST`,
+        cpu: 0,
+        gpu: 0,
+        node: 0,
+        memory: 0,
+        wait: {
+          hour: 0,
+          min: 0,
+        },
+        schedule: `gang`,
+      },
+    };
+  },
+  fetch() {
+    const scheduleType = [`gang`, `conformance`, `DRF`, `nodeorder`];
+    this.scheduleList = scheduleType;
+  },
+  computed: {
+    getSchedule() {
+      return this.scheduleList;
+    },
   },
   methods: {
-    testMethod(test) {
-      console.log(test);
+    testMethod() {
+      console.log(`test`);
     },
   },
 };
@@ -80,26 +81,25 @@ export default {
     <div class="mb-20">
       <div class="row">
         <p class="col span-3">Namespace</p>
-        <p class="col span-3">App Version</p>
+        <!-- <p class="col span-3">App Version</p> -->
       </div>
       <div class="row">
         <div class="col span-3">
           <Select
             v-model="model.namespace.opt"
-            :disabled="true"
             :options="model.namespace.list"
           />
         </div>
-        <div class="col span-3">
+        <!-- <div class="col span-3">
           <Select
             v-model="model.appVer.opt"
             :disabled="true"
             :options="model.appVer.list"
           />
-        </div>
+        </div> -->
       </div>
     </div>
-    <div class="mb-20">
+    <!-- <div class="mb-20">
       <div>
         <p>Command</p>
       </div>
@@ -114,7 +114,53 @@ export default {
       <div class="col span-3">
         <Select v-model="model.cmdTemplate" :options="['MPI', 'TEST']" />
       </div>
+    </div> -->
+    <div class="mb-20">
+      <div>
+        <p>Wait time</p>
+      </div>
+      <div class="row">
+        <div class="col span-3">
+          <UnitInput
+            v-model="model.wait.hour"
+            :inputExponent="0"
+            suffix="hours"
+            :min="0"
+            type="number"
+          />
+        </div>
+        <div class="col span-3">
+          <UnitInput
+            v-model="model.wait.min"
+            :inputExponent="0"
+            suffix="mins"
+            :min="0"
+            type="number"
+          />
+        </div>
+      </div>
     </div>
+    <div class="mb-20">
+      <div>
+        <p>License</p>
+      </div>
+      <div class="col span-3">
+        <LabeledInput value="" type="text" />
+      </div>
+    </div>
+    <div class="mb-20">
+      <button class="role-tertiary" @click="testMethod">Check</button>
+    </div>
+    <!-- <div class="mb-20">
+      <div class="row">
+        <p class="col span-3">Schedule</p>
+      </div>
+      <div class="row">
+        <div class="col span-3">
+          <Select v-model="model.schedule" :options="getSchedule" />
+        </div>
+      </div>
+    </div> -->
     <div class="mb-20">
       <div class="row">
         <p class="col span-3">CPU</p>
@@ -165,42 +211,6 @@ export default {
           />
         </div>
       </div>
-    </div>
-    <div class="mb-20">
-      <div>
-        <p>Wait time</p>
-      </div>
-      <div class="row">
-        <div class="col span-3">
-          <UnitInput
-            v-model="wait.hour"
-            :inputExponent="0"
-            suffix="hours"
-            :min="0"
-            type="number"
-          />
-        </div>
-        <div class="col span-3">
-          <UnitInput
-            v-model="wait.min"
-            :inputExponent="0"
-            suffix="mins"
-            :min="0"
-            type="number"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="mb-20">
-      <div>
-        <p>License</p>
-      </div>
-      <div class="col span-3">
-        <LabeledInput value="" type="text" />
-      </div>
-    </div>
-    <div>
-        <button class="role-tertiary"> Check</button>
     </div>
   </div>
 </template>
