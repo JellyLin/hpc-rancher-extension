@@ -10,6 +10,7 @@ export function init($plugin: IPlugin, store: any) {
   const CUSTOM_PAGE_NAME_2 = 'FileExplorer';
   const CUSTOM_PAGE_NAME_3 = 'Summary';
   const CUSTOM_PAGE_NAME_4 = 'Settings';
+  const CUSTOM_PAGE_NAME_5 = 'Install';
 
   const {
     product,
@@ -81,6 +82,15 @@ export function init($plugin: IPlugin, store: any) {
     weight:   9.6,
     route:    {
       name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_4 }`,
+      params: { product: YOUR_PRODUCT_NAME }
+    }
+  });
+  virtualType({
+    labelKey: 'some.translation.key',
+    name:     CUSTOM_PAGE_NAME_5,
+    weight:   5,
+    route:    {
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_5 }`,
       params: { product: YOUR_PRODUCT_NAME }
     }
   });

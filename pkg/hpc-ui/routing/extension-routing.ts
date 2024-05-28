@@ -5,6 +5,7 @@ import ViewNamespacedResource from '@shell/pages/c/_cluster/_product/_resource/_
 import VolcanoJobTable from '../list/batch.volcano.sh.job.vue';
 import FileExplorer from '../pages/FileExplorer.vue';
 // import HpcAppCenter from '../pages/HpcAppCenter.vue';
+import HpcInstall from '../pages/HpcInstall.vue';
 
 // to achieve naming consistency throughout the extension
 // we recommend this to be defined on a config file and exported
@@ -21,6 +22,12 @@ const routes = [
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ YOUR_K8S_RESOURCE_NAME }`,
     component: VolcanoJobTable,
     meta:      { product: YOUR_PRODUCT_NAME },
+  },
+  {
+    name:       `c-cluster-${YOUR_PRODUCT_NAME}-Install`,
+    path:       `/c/:cluster/${YOUR_PRODUCT_NAME}/Install`,
+    component:  HpcInstall,
+    meta:       { product: YOUR_PRODUCT_NAME }
   },
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-create`,
