@@ -12,6 +12,7 @@ import SteveModel from '@shell/plugins/steve/steve-class';
 import { STATES_ENUM } from '@shell/plugins/dashboard-store/resource-class';
 
 const INGRESS = 'networking.k8s.io.ingress';
+const AnnotationsKeyChartName = 'meta.helm.sh/release-name';
 const OpenWithIngress = true;
 const OpenWithSerivce = false;
 
@@ -103,7 +104,7 @@ export default class VolcanoJob extends SteveModel {
   get podResource() {
     const podList = this.$rootGetters['cluster/all'](`Pod`);
     const vcjobName = this.name;
-    const chartName = this.metadata?.annotations?.['app.kubernetes.io/instance'];
+    const chartName = this.metadata?.annotations?.[AnnotationsKeyChartName];
 
     return podList.find((P) => {
       // return true;
