@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - demo_202405
+      - main
   pull_request:
     branches:
-      - demo_202405
+      - main
 
 defaults:
   run:
@@ -16,7 +16,7 @@ defaults:
 
 jobs:
   build-extension-charts:
-    uses: JellyLin/hpc-rancher-extension/.github/workflows/dashboard-build-extension-charts.yml@demo_202405
+    uses: rancher/dashboard/.github/workflows/build-extension-charts.yml@master
     permissions:
       actions: write
       contents: write
