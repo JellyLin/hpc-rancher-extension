@@ -11,3 +11,11 @@ hpc:
     status: Status
   console:
     novnc: Open with VNC
+  jobs:
+    title: Valcano Jobs
+  summary:
+    title: Summary
+  explorer:
+    title: File Explorer
+  settings:
+    title: Settings

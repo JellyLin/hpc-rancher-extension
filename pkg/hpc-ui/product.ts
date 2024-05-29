@@ -7,7 +7,10 @@ export function init($plugin: IPlugin, store: any) {
   const YOUR_PRODUCT_NAME = 'HPC';
   const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
   const CUSTOM_PAGE_NAME = 'VolcanoJobs';
-  // const CUSTOM_PAGE_NAME_2 = 'AppCenter';
+  const CUSTOM_PAGE_NAME_2 = 'FileExplorer';
+  const CUSTOM_PAGE_NAME_3 = 'Summary';
+  const CUSTOM_PAGE_NAME_4 = 'Settings';
+  const CUSTOM_PAGE_NAME_5 = 'Install';
 
   const {
     product,
@@ -47,27 +50,57 @@ export function init($plugin: IPlugin, store: any) {
 
   // creating a custom page
   virtualType({
-    labelKey: 'some.translation.key',
+    labelKey: 'hpc.jobs.title',
     name:     CUSTOM_PAGE_NAME,
-    weight:   9.1,
+    weight:   9.9,
     route:    {
       name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ YOUR_K8S_RESOURCE_NAME }`,
       params: { product: YOUR_PRODUCT_NAME }
     }
   });
-  // virtualType({
-  //   labelKey: 'some.translation.key',
-  //   name:     CUSTOM_PAGE_NAME_2,
-  //   weight:   9,
-  //   route:    {
-  //     name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_2 }`,
-  //     params: { product: YOUR_PRODUCT_NAME }
-  //   }
-  // });
+  virtualType({
+    labelKey: 'hpc.explorer.title',
+    name:     CUSTOM_PAGE_NAME_2,
+    weight:   9.8,
+    route:    {
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_2 }`,
+      params: { product: YOUR_PRODUCT_NAME }
+    }
+  });
+  virtualType({
+    labelKey: 'hpc.summary.title',
+    name:     CUSTOM_PAGE_NAME_3,
+    weight:   9.7,
+    route:    {
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_3 }`,
+      params: { product: YOUR_PRODUCT_NAME }
+    }
+  });
+  virtualType({
+    labelKey: 'hpc.settings.title',
+    name:     CUSTOM_PAGE_NAME_4,
+    weight:   9.6,
+    route:    {
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_4 }`,
+      params: { product: YOUR_PRODUCT_NAME }
+    }
+  });
+  virtualType({
+    labelKey: 'hpc.install',
+    name:     CUSTOM_PAGE_NAME_5,
+    weight:   9.5,
+    route:    {
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_5 }`,
+      params: { product: YOUR_PRODUCT_NAME }
+    }
+  });
 
   // registering the defined pages as side-menu entries
   basicType([
     CUSTOM_PAGE_NAME,
-    // CUSTOM_PAGE_NAME_2,
+    CUSTOM_PAGE_NAME_2,
+    // CUSTOM_PAGE_NAME_3,
+    // CUSTOM_PAGE_NAME_4,
+    CUSTOM_PAGE_NAME_5
   ]);
 }
