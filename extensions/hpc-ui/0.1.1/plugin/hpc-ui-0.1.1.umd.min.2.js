@@ -1,0 +1,2 @@
+(("undefined"!==typeof self?self:this)["webpackJsonphpc_ui_0_1_1"]=("undefined"!==typeof self?self:this)["webpackJsonphpc_ui_0_1_1"]||[]).push([[2],{"1bb6":function(e,s){const t=[{hpc:{productLabel:"HPC",tableHeaders:{tasks:"Tasks",containers:"Containers",plugins:"Plugins",volumes:"Volumes",runningDuration:"runningDuration",queue:"Queue",open:"Open",status:"Status"},jobs:{title:"Valcano Jobs"},summary:{title:"Summary"},explorer:{title:"File Explorer"},settings:{title:"Settings"}}}];e.exports=t.length<=1?t[0]:t}}]);
+//# sourceMappingURL=hpc-ui-0.1.1.umd.min.2.js.map
