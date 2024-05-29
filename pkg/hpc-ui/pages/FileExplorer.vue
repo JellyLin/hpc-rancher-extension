@@ -1,5 +1,6 @@
 <script>
 import { NODE } from '@shell/config/types';
+import { RaidCliService } from '../eonone2/raid-cli-service';
 // import { NODE_ROLES } from '@shell/config/labels-annotations.js';
 export const NODE_ROLES = {
   CONTROL_PLANE_OLD: 'node-role.kubernetes.io/controlplane',
@@ -25,8 +26,16 @@ export default {
   data() {
     const principal = this.$store.getters['rancher/byId']('principal', this.$store.getters['auth/principalId']);
     const scmgmtIP = getEonOneIp(this.$store);
+    const showExternalStorage = RaidCliService.showExternalStorage;
+    const deleteMap = RaidCliService.deleteMap;
+    console.log(RaidCliService);
 
-    return { principal, scmgmtIP };
+    return {
+      principal,
+      scmgmtIP,
+      RaidCliService,
+      cmd: { showExternalStorage, deleteMap }
+    };
   },
 
   methods: {},
@@ -49,6 +58,14 @@ export default {
       <li>>4. EonOne 可由這user name 透過系統查uid</li>
       <li>5. Get GSx FileExplorer login token</li>
       <li><a :href="`http://172.24.110.128:8989?token=abc&username=${principal.loginName}`" target="_blank">6. Redirect UI to GSx FileExplorer with token</a></li>
+    </ul>
+    <ul>
+      <li v-for="item in RaidCliService" :key="item">
+        {{ item }}
+      </li>
+      <li v-for="item in cmd" :key="item">
+        {{ item }}
+      </li>
     </ul>
   </div>
 </template>
