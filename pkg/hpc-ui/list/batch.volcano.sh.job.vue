@@ -5,8 +5,13 @@ import ButtonDropdown from '@shell/components/ButtonDropdown';
 import { STATE, NAME, STATUS, AGE } from '@shell/config/table-headers';
 import { LOGGING, SCHEMA } from '@shell/config/types';
 import ResourceFetch from '@shell/mixins/resource-fetch';
+import { allHash } from '@shell/utils/promise';
 
 const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
+const INGRESS = 'networking.k8s.io.ingress';
+
+const OpenWithIngress = true;
+const OpenWithSerivce = false;
 
 const schema = {
   id:         YOUR_K8S_RESOURCE_NAME,
@@ -35,12 +40,14 @@ export default {
 
   data() {
     const inStore = this.$store.getters['currentProduct'].inStore;
-    // return !!this.$store.getters[`${ inStore }/schemaFor`](METRIC.NODE);
     const schema = this.$store.getters[`${ inStore }/schemaFor`](YOUR_K8S_RESOURCE_NAME);
 
     return {
       resource:  YOUR_K8S_RESOURCE_NAME,
       resources: [],
+      services:  [],
+      ingresses: [],
+      pods:      [],
       schema,
     };
   },
@@ -117,12 +124,55 @@ export default {
     canCreateCluster() {
       return true;
     },
+    options() {
+      return [
+        {
+          label: this.t('hpc.console.novnc'),
+          value: 'vnc'
+        },
+        // {
+        //   label: this.t('harvester.virtualMachine.console.serial'),
+        //   value: 'serial'
+        // }
+      ];
+    }
+  },
+
+  methods: {
+    handleDropdown(e, row) {
+      const url = row.vncURL;
+
+      if (url !== ``) {
+        window.open(
+          url,
+          '_blank',
+          'toolbars=0,width=900,height=700,left=0,top=0,noreferrer'
+        );
+      }
+    },
   },
 
   async fetch() {
     console.log(this);
+    const inStore = this.$store.getters['currentProduct'].inStore;
+
     this.$initializeFetchData(YOUR_K8S_RESOURCE_NAME);
     this.$fetchType(LOGGING.CLUSTER_OUTPUT);
+
+    if (OpenWithSerivce) {
+      if (this.$store.getters[`${ inStore }/schemaFor`]('Service')) {
+        this.services = await this.$fetchType(`Service`);
+      }
+    }
+    if (OpenWithIngress) {
+      if (this.$store.getters[`${ inStore }/schemaFor`](INGRESS)) {
+        this.ingresses = await this.$fetchType(INGRESS);
+      }
+    }
+
+    if (this.$store.getters[`${ inStore }/schemaFor`](`Pod`)) {
+      this.pods = await this.$fetchType(`Pod`);
+    }
 
     this.resources = await this.$fetchType(YOUR_K8S_RESOURCE_NAME);
   },
@@ -156,19 +206,20 @@ export default {
       :use-query-params-for-simple-filtering="useQueryParamsForSimpleFiltering"
       :force-update-live-and-delayed="forceUpdateLiveAndDelayed"
     >
-      <template
+      <!-- <template
         slot="cell:console"
-      >
+      > -->
+      <template #cell:console="{row}">
         <div class="name-console">
           <div class="overview-web-console">
             <ButtonDropdown
               button-label="Console"
               size="sm"
+              :disabled="row.isConsoleOff"
+              :no-drop="row.isConsoleOff"
+              :dropdown-options="options"
+              @click-action="e=>handleDropdown(e, row)"
             />
-            <!-- :disabled="isOff"
-              :no-drop="isOff" -->
-            <!-- :dropdown-options="options" -->
-            <!-- @click-action="handleDropdown" -->
           </div>
         </div>
       </template>
