@@ -11,6 +11,11 @@ import Vue from 'vue';
 import SteveModel from '@shell/plugins/steve/steve-class';
 import { STATES_ENUM } from '@shell/plugins/dashboard-store/resource-class';
 
+const INGRESS = 'networking.k8s.io.ingress';
+const AnnotationsKeyChartName = 'meta.helm.sh/release-name';
+const OpenWithIngress = true;
+const OpenWithSerivce = false;
+
 export default class VolcanoJob extends SteveModel {
   applyDefaults(_, realMode) {
     // const accessModes = realMode === _CLONE ? this.spec.accessModes : [];
@@ -66,8 +71,13 @@ export default class VolcanoJob extends SteveModel {
     insertAt(out, 0, this.resumeItem)
     insertAt(out, 0, this.testItem)
     insertAt(out, 0, { divider: true });
-    insertAt(out, 0, this.openLogsMenuItem);
-    insertAt(out, 0, this.openShellMenuItem);
+
+    const pod = this.podResource;
+
+    if (pod) {
+      insertAt(out, 0, this.openLogsMenuItem);
+      insertAt(out, 0, this.openShellMenuItem);
+    }
 
     return out;
   }
@@ -92,6 +102,85 @@ export default class VolcanoJob extends SteveModel {
       label: 'View Logs',
       total: 1,
     };
+  }
+
+  get podResource() {
+    const podList = this.$rootGetters['cluster/all'](`Pod`);
+    const vcjobName = this.name;
+    const chartName = this.metadata?.annotations?.[AnnotationsKeyChartName];
+
+    return podList.find((P) => {
+      // return true;
+      return (
+        this.metadata.namespace === P.metadata?.namespace &&
+        `${ vcjobName }-${ chartName }-master-0` === P.metadata?.name
+      );
+    });
+  }
+
+  get vncURL() {
+    const vcjob = this;
+    let url = ``;
+
+    if (OpenWithIngress) {
+      const ingresses = this.$rootGetters['cluster/all'](INGRESS);
+
+      ingresses.forEach((igs) => {
+        if (url === ``) {
+          if (igs.metadata.namespace === vcjob.namespace) {
+            url = igs.createRulesForListPage()?.[0]?.fullPath;
+          }
+        }
+      });
+    }
+
+    if (OpenWithSerivce) {
+      const services = this.$rootGetters['cluster/all']('Service');
+      let host = ``;
+      let port = ``;
+
+      services.forEach((s) => {
+        if (s.metadata.name === 'gatkvnc' && s.metadata.namespace === vcjob.namespace) {
+          host = s.spec.loadBalancerIP;
+          if (s.spec.ports.length > 0) {
+            s.spec.ports.forEach((p) => {
+              if (p.name === 'novnc') {
+                port = p.targetPort;
+              }
+            });
+          }
+        }
+      });
+      if (host !== `` && port !== ``) {
+        url = `https://${ host }:${ port }`;
+      }
+    }
+
+    return url;
+  }
+
+  get isConsoleOff() {
+    return !this.vncURL;
+  }
+
+  openLogs() {
+    const pod = this.podResource;
+
+    if (pod) {
+      pod.openLogs();
+    } else {
+      console.error(`Can NOT pod`);
+    }
+  }
+
+  openShell() {
+    const pod = this.podResource;
+
+    if (pod) {
+      pod.openShell();
+    } else {
+      console.error(`Can NOT pod`);
+    }
   }
 
   get pauseItem() {
