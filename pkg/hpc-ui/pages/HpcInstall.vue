@@ -5,7 +5,7 @@ import Tabbed from "@shell/components/Tabbed";
 import UnitInput from "@shell/components/form/UnitInput";
 import LabeledInput from "@components/Form/LabeledInput/LabeledInput.vue";
 import Select from "@shell/components/form/Select.vue";
-import AsyncButton from "@shell/components/AsyncButton";
+import ContainerMountPaths from "@shell/edit/workload/storage/ContainerMountPaths";
 
 export default {
   name: "HpcInstall",
@@ -16,7 +16,7 @@ export default {
     UnitInput,
     LabeledInput,
     Select,
-    AsyncButton,
+    ContainerMountPaths
   },
   props: {
     mode: {
@@ -90,31 +90,8 @@ export default {
             :options="model.namespace.list"
           />
         </div>
-        <!-- <div class="col span-3">
-          <Select
-            v-model="model.appVer.opt"
-            :disabled="true"
-            :options="model.appVer.list"
-          />
-        </div> -->
       </div>
     </div>
-    <!-- <div class="mb-20">
-      <div>
-        <p>Command</p>
-      </div>
-      <div class="col span-3">
-        <LabeledInput v-model="model.command" type="text" />
-      </div>
-    </div>
-    <div class="mb-20">
-      <div>
-        <p>Command template</p>
-      </div>
-      <div class="col span-3">
-        <Select v-model="model.cmdTemplate" :options="['MPI', 'TEST']" />
-      </div>
-    </div> -->
     <div class="mb-20">
       <div>
         <p>Wait time</p>
@@ -140,27 +117,6 @@ export default {
         </div>
       </div>
     </div>
-    <div class="mb-20">
-      <div>
-        <p>License</p>
-      </div>
-      <div class="col span-3">
-        <LabeledInput value="" type="text" />
-      </div>
-    </div>
-    <div class="mb-20">
-      <button class="role-tertiary" @click="testMethod">Check</button>
-    </div>
-    <!-- <div class="mb-20">
-      <div class="row">
-        <p class="col span-3">Schedule</p>
-      </div>
-      <div class="row">
-        <div class="col span-3">
-          <Select v-model="model.schedule" :options="getSchedule" />
-        </div>
-      </div>
-    </div> -->
     <div class="mb-20">
       <div class="row">
         <p class="col span-3">CPU</p>
@@ -211,6 +167,9 @@ export default {
           />
         </div>
       </div>
+    </div>
+    <div>
+      <ContainerMountPaths />
     </div>
   </div>
 </template>

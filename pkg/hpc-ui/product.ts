@@ -86,9 +86,9 @@ export function init($plugin: IPlugin, store: any) {
     }
   });
   virtualType({
-    labelKey: 'some.translation.key',
+    labelKey: 'hpc.install',
     name:     CUSTOM_PAGE_NAME_5,
-    weight:   5,
+    weight:   9.5,
     route:    {
       name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_5 }`,
       params: { product: YOUR_PRODUCT_NAME }
@@ -101,5 +101,6 @@ export function init($plugin: IPlugin, store: any) {
     CUSTOM_PAGE_NAME_2,
     // CUSTOM_PAGE_NAME_3,
     // CUSTOM_PAGE_NAME_4,
+    CUSTOM_PAGE_NAME_5
   ]);
 }

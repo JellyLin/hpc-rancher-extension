@@ -38,7 +38,7 @@ export default class VolcanoJob extends SteveModel {
     const plugins = [];
 
     for (const plugin in this.spec.plugins) {
-      if ( this.spec.plugins[plugin].length > 0 ) {
+      if (this.spec.plugins[plugin].length > 0) {
         plugins.push(plugin);
       }
     }
@@ -62,6 +62,9 @@ export default class VolcanoJob extends SteveModel {
     const out = super._availableActions;
 
     // Add backwards, each one to the top
+    insertAt(out, 0, this.pauseItem)
+    insertAt(out, 0, this.resumeItem)
+    insertAt(out, 0, this.testItem)
     insertAt(out, 0, { divider: true });
     insertAt(out, 0, this.openLogsMenuItem);
     insertAt(out, 0, this.openShellMenuItem);
@@ -71,23 +74,66 @@ export default class VolcanoJob extends SteveModel {
 
   get openShellMenuItem() {
     return {
-      action:  'openShell',
+      action: 'openShell',
       // enabled: !!this.links.view && this.isRunning,
       enabled: true,
-      icon:    'icon icon-fw icon-chevron-right',
-      label:   'Execute Shell',
-      total:   1,
+      icon: 'icon icon-fw icon-chevron-right',
+      label: 'Execute Shell',
+      total: 1,
     };
   }
 
   get openLogsMenuItem() {
     return {
-      action:  'openLogs',
+      action: 'openLogs',
       // enabled: !!this.links.view,
       enabled: true,
-      icon:    'icon icon-fw icon-chevron-right',
-      label:   'View Logs',
-      total:   1,
+      icon: 'icon icon-fw icon-chevron-right',
+      label: 'View Logs',
+      total: 1,
     };
+  }
+
+  get pauseItem() {
+    return {
+      action: `pause`,
+      enabled: this.status.state.phase === `Pending` || this.status.state.phase === `Running`,
+      icon: `icon icon-fw icon-pause`,
+      label: 'Pause',
+      total: 1
+    }
+  }
+
+  get resumeItem() {
+    return {
+      action: `resume`,
+      enabled: this.status.state.phase === `Aborted`,
+      icon: `icon icon-fw icon-play`,
+      label: 'Resume',
+      total: 1
+    }
+  }
+
+  get testItem() {
+    return {
+      action: `test`,
+      enabled: true,
+      icon: `icon icon-fw`,
+      label: 'Test',
+      total: 1
+    }
+  }
+
+  pause() {
+    // TODO pause this
+  }
+
+  resume() {
+    // TODO resume this
+  }
+
+  test() {
+    console.log(this);
+    console.log(`this is test method`);
   }
 }

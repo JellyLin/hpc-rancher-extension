@@ -24,12 +24,6 @@ const routes = [
     meta:      { product: YOUR_PRODUCT_NAME },
   },
   {
-    name:       `c-cluster-${YOUR_PRODUCT_NAME}-Install`,
-    path:       `/c/:cluster/${YOUR_PRODUCT_NAME}/Install`,
-    component:  HpcInstall,
-    meta:       { product: YOUR_PRODUCT_NAME }
-  },
-  {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-create`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/create`,
     component: CreateResource,
@@ -63,6 +57,12 @@ const routes = [
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_4 }`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME_4 }`,
     meta:      { product: YOUR_PRODUCT_NAME },
+  },
+  {
+    name:       `c-cluster-${YOUR_PRODUCT_NAME}-Install`,
+    path:       `/c/:cluster/${YOUR_PRODUCT_NAME}/Install`,
+    component:  HpcInstall,
+    meta:       { product: YOUR_PRODUCT_NAME }
   },
 ];
 
