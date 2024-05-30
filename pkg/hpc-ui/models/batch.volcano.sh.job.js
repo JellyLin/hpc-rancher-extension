@@ -107,7 +107,8 @@ export default class VolcanoJob extends SteveModel {
   get podResource() {
     const podList = this.$rootGetters['cluster/all'](`Pod`);
     const vcjobName = this.name;
-    const chartName = this.metadata?.annotations?.[AnnotationsKeyChartName];
+    // const chartName = this.metadata?.annotations?.[AnnotationsKeyChartName];
+    const chartName = this.spec?.tasks?.[0]?.template?.metadata?.labels?.app;
 
     return podList.find((P) => {
       // return true;
