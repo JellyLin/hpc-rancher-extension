@@ -18,6 +18,8 @@
   },
   "scripts": {
     "dev": "API=https://172.27.120.61 NODE_ENV=dev ./node_modules/.bin/vue-cli-service serve --port 9527",
+    "dev2": "API=https://rancher.hpccluster NODE_ENV=dev ./node_modules/.bin/vue-cli-service serve --port 9527",
+    "dev3": "API=https://172.27.118.111 NODE_ENV=dev ./node_modules/.bin/vue-cli-service serve --port 9527",
     "build": "./node_modules/.bin/vue-cli-service build",
     "clean": "./node_modules/@rancher/shell/scripts/clean",
     "build-pkg": "./node_modules/@rancher/shell/scripts/build-pkg.sh",
