@@ -23,7 +23,9 @@
 }
 </pre>
 * 3. git clone project
-http://swcodeserver.infortrend.com/k8sproject/hpc-rancher-extension/-/tree/hpc-ui
+```
+git clone  --recurse-submodules http://swcodeserver.infortrend.com/k8sproject/hpc-rancher-extension
+```
 * 4. edit package.json
 https://docs.google.com/spreadsheets/d/1Y2XNmpGutOCpVVQU8WgIG2hv1CEM--74VraZvXA2lqM/edit#gid=567859775
 <pre>
