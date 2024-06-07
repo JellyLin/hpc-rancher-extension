@@ -1,6 +1,7 @@
 <script>
 import { NODE } from '@shell/config/types';
 import { RaidCliService } from '../eonone2/raid-cli-service';
+import { EonOneJobService } from '../eonone2/eonkube-service';
 // import { NODE_ROLES } from '@shell/config/labels-annotations.js';
 export const NODE_ROLES = {
   CONTROL_PLANE_OLD: 'node-role.kubernetes.io/controlplane',
@@ -18,7 +19,8 @@ function getEonOneIp(store) {
   const headNode = allNodes.filter(n => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
-  return (scmgmtIP === '') ? scmgmtIP : '172.27.118.109';
+  return (scmgmtIP === '') ? scmgmtIP : '172.27.118.101';
+  // return (scmgmtIP === '') ? scmgmtIP : '172.27.12.113';
 }
 
 export default {
@@ -28,14 +30,16 @@ export default {
   data() {
     const principal = this.$store.getters['rancher/byId']('principal', this.$store.getters['auth/principalId']);
     const showExternalStorage = RaidCliService.showExternalStorage;
+    const openFileExplorer = RaidCliService.openFileExplorer;
     const deleteMap = RaidCliService.deleteMap;
     console.log(this);
 
     return {
       principal,
-      scmgmtIP: '',
+      scmgmtIP:         '',
       RaidCliService,
-      cmd: { showExternalStorage, deleteMap }
+      EonOneJobAPI: '',
+      cmd:              { openFileExplorer, showExternalStorage, deleteMap }
     };
   },
 
@@ -45,33 +49,15 @@ export default {
     if (this.$store.getters[`${ inStore }/schemaFor`](NODE)) {
       this.scmgmtIP = await getEonOneIp(this.$store);
     }
+    this.EonOneJobAPI = new EonOneJobService(undefined, this.$store);
+    // this.EonOneJobAPI = new EonOneJobService(this.scmgmtIP, this.$store);
   },
 
   methods: {
-    async test(cli) {
-      try {
-        console.log(cli);
-        // kubectl get cm 2ad5f604-7cff-48b6-b891-57882847f222
-        // apply configmap under user namespace
-        // cli: showExternalStorage, fill params
-        const requestOptions = {
-          url:                  `meta/proxy/http:/${ this.scmgmtIP }:8816/eonkube/job/2ad5f604-7cff-48b6-b891-57882847f222`,
-          method:               'GET',
-          headers:              { 'Content-Type': 'application/json' },
-          // redirectUnauthorized: false,
-        };
-
-        const response = await this.$store.dispatch('management/request', requestOptions);
-        const data = await response;
-
-        if (data.access_token !== undefined && data.access_token !== null && data.access_token !== '') {
-          return true;
-        }
-
-        return false;
-      } catch (e) {
-        return false;
-      }
+    callApiBtn(cmd) {
+      console.log(cmd.name); // 'showExternalStorage'
+      // this.EonOneJobAPI.showExternalStorage();
+      this.EonOneJobAPI.executeJob(cmd.name);
     }
   },
 
@@ -101,7 +87,7 @@ export default {
       <li v-for="(item, index) in cmd" :key="index">
         <div v-if="true">
           <span>{{ item }}</span>
-          <button :action="test(item)">
+          <button @click="callApiBtn(item)">
             Click
           </button>
         </div>

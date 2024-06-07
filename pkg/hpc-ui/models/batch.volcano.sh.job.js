@@ -51,6 +51,30 @@ export default class VolcanoJob extends SteveModel {
     return plugins;
   }
 
+  get volumeMounts() {
+    this.spec.tasks.map((task) => {
+      const volumes = {};
+
+      if (task.template.spec?.volumes) {
+        task.template.spec.volumes.forEach((v) => {
+          volumes[v.name] = v;
+        });
+      }
+
+      if (task.template.spec.containers) {
+        task.template.spec?.containers.map((c) => {
+          if (c.volumeMounts) {
+            c.volumeMounts.forEach((m, index) => {
+              c.volumeMounts[index] = { ...m, ...volumes[m.name] };
+            });
+          }
+        });
+      }
+    });
+
+    return this;
+  }
+
   // get statusDisplay() {
   //   const status = this?.status?.phase === 'Bound' ? 'Ready' : 'NotReady';
 
