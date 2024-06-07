@@ -32,6 +32,25 @@ entries:
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
+    appVersion: 1.1.1
+    created: "2024-06-07T03:16:25.015589152Z"
+    description: hpc-ui plugin
+    digest: 5c9170c8a9f460de26878b379e04de8932795cf9ee45b29959adeb9cb57e8197
+    name: hpc-ui
+    type: application
+    urls:
+    - https://github.com/JellyLin/hpc-rancher-extension/releases/download/hpc-ui-1.1.1/hpc-ui-1.1.1.tgz
+    version: 1.1.1
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.29.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.9.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
     appVersion: 1.1.0
     created: "2024-05-30T08:37:35.740916189Z"
     description: hpc-ui plugin
@@ -387,4 +406,4 @@ entries:
     urls:
     - assets/jelly-demo/jelly-demo-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-30T08:37:35.741055741Z"
+generated: "2024-06-07T03:16:25.015726408Z"
