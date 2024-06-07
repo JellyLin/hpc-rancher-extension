@@ -1,7 +1,6 @@
 // ./routing/extension-routing.ts
 import CreateResource from '@shell/pages/c/_cluster/_product/_resource/create.vue';
 import ViewResource from '@shell/pages/c/_cluster/_product/_resource/_id.vue';
-import ViewNamespacedResource from '@shell/pages/c/_cluster/_product/_resource/_namespace/_id.vue';
 import VolcanoJobTable from '../list/batch.volcano.sh.job.vue';
 import FileExplorer from '../pages/FileExplorer.vue';
 // import HpcAppCenter from '../pages/HpcAppCenter.vue';
@@ -33,12 +32,6 @@ const routes = [
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-id`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:id`,
     component: ViewResource,
-    meta:      { product: YOUR_PRODUCT_NAME },
-  },
-  {
-    name:      `c-cluster-${ YOUR_PRODUCT_NAME }-resource-namespace-id`,
-    path:      `/:cluster/${ YOUR_PRODUCT_NAME }/:resource/:namespace/:id`,
-    component: ViewNamespacedResource,
     meta:      { product: YOUR_PRODUCT_NAME },
   },
   // this covers the "custom page"
