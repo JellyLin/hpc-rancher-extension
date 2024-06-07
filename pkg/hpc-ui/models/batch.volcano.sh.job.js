@@ -143,6 +143,51 @@ export default class VolcanoJob extends SteveModel {
     });
   }
 
+  get detailsPage() {
+    const podList = this.$rootGetters['cluster/all'](`Pod`);
+    const uid = this.metadata.uid;
+    const pods = podList.filter((P) => {
+      // return true;
+      return (
+        P.metadata?.ownerReferences &&
+        P.metadata?.ownerReferences.find((r) => {
+          return r.uid === uid;
+        })
+      );
+    });
+    let nodes = pods.map((P) => {
+      return P.spec?.nodeName;
+    });
+
+    nodes = [...new Set(nodes)];
+
+    const CPU = this.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || 'no value';
+    const TotalCPUs = pods.length * CPU || 'no value';
+    const Memory = this.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || 'no value';
+    const Appname = '.metadata.labels[] | { ."helm.sh/chart" }';
+    const Command = this.spec.tasks?.[0].template.spec.containers?.[0].command || 'no value';
+
+    return {
+      pods,
+      nodes,
+      CPU,
+      TotalCPUs,
+      Memory,
+      Appname,
+      Command,
+    };
+  }
+
+  // get nodeList() {
+  //   const pods = this.relatedResource.pod;
+  //   const nodes = pods.map((P) => {
+  //     return P.metadata?.nodeName;
+  //   });
+  //   const uniqueNode = [...new Set(nodes)];
+
+  //   return uniqueNode;
+  // }
+
   get vncURL() {
     const vcjob = this;
     let url = ``;

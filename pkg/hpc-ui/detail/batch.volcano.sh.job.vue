@@ -40,6 +40,8 @@ export default {
   mixins: [CreateEditView, V1WorkloadMetrics],
 
   async fetch() {
+    console.log(this);
+    console.log(this.$store);
     this.showMetrics = await allDashboardsExist(this.$store, this.currentCluster.id, [POD_METRICS_DETAIL_URL, POD_METRICS_SUMMARY_URL]);
     if (!this.showMetrics) {
       const namespace = await this.$store.dispatch('cluster/find', { type: NAMESPACE, id: this.value.metadata.namespace });
@@ -52,6 +54,13 @@ export default {
 
         this.showProjectMetrics = await allDashboardsExist(this.$store, this.currentCluster.id, [this.POD_PROJECT_METRICS_DETAIL_URL, this.POD_PROJECT_METRICS_SUMMARY_URL], 'cluster', projectId);
       }
+    }
+    const inStore = this.$store.getters['currentProduct'].inStore;
+
+    if (this.$store.getters[`${ inStore }/schemaFor`](`Pod`)) {
+      await this.$store.dispatch(`${ inStore }/findAll`, {
+        type: 'pod'
+      });
     }
   },
 
@@ -273,45 +282,82 @@ export default {
         :mode="'view'"
       />
       <LabeledInput
-        v-model="vcjob.status.state"
+        v-model="vcjob.status.state.phase"
         :label="'Status'"
         :mode="'view'"
       />
-      <SimpleBox
-        :title="'TotalNodes'"
-      >
-        <div> count of node list </div>
-      </SimpleBox>
-      <SimpleBox
+      <LabeledInput
+        v-model="vcjob.detailsPage.nodes.length"
+        :label="'TotalNodes'"
+        :disabled="true"
+      />
+      <LabeledInput
+        v-model="vcjob.detailsPage.nodes"
+        :label="'NodeList'"
+        :disabled="true"
+      />
+      <!-- <SimpleBox
         :title="'NodeList'"
       >
         <div>Pod List -> .spec.nodeName</div>
-      </SimpleBox>
-      <SimpleBox
+        <span
+          v-for="(node, index) in vcjob.detailsPage.nodes"
+          :key="index"
+        >
+          {{ node }}
+        </span>
+      </SimpleBox> -->
+      <LabeledInput
+        v-model="vcjob.detailsPage.TotalCPUs"
+        :label="'TotalCPUs'"
+        :disabled="true"
+      />
+      <!-- <SimpleBox
         :title="'TotalCPUs'"
       >
-        <div>n pods * {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
-      </SimpleBox>
-      <SimpleBox
+        <div> {{ vcjob.detailsPage.pods.length }} pods * each {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }} core(s) </div>
+        <div> = {{ vcjob.detailsPage.pods.length * vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
+      </SimpleBox> -->
+      <LabeledInput
+        v-model="vcjob.detailsPage.TotalCPUs"
+        :label="'Memory'"
+        :disabled="true"
+      />
+      <!-- <SimpleBox
         :title="'Memory'"
       >
-        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || '' }}</div>
-      </SimpleBox>
-      <SimpleBox
+        <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || 'no value' }}</div>
+      </SimpleBox> -->
+      <LabeledInput
+        v-model="vcjob.detailsPage.CPU"
+        :label="'CPU'"
+        :disabled="true"
+      />
+      <!-- <SimpleBox
         :title="'CPU'"
       >
-        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
-      </SimpleBox>
-      <SimpleBox
+        <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || 'no value' }}</div>
+      </SimpleBox> -->
+      <LabeledInput
+        v-model="vcjob.detailsPage.CPU"
+        :label="'Appname'"
+        :disabled="true"
+      />
+      <!-- <SimpleBox
         :title="'Appname'"
       >
         <div>.metadata.labels[] | { ."helm.sh/chart" }</div>
-      </SimpleBox>
-      <SimpleBox
+      </SimpleBox> -->
+      <LabeledInput
+        v-model="vcjob.detailsPage.Command"
+        :label="'Command'"
+        :disabled="true"
+      />
+      <!-- <SimpleBox
         :title="'Command'"
       >
-        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].command || '' }}</div>
-      </SimpleBox>
+        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].command || 'no value' }}</div>
+      </SimpleBox> -->
       <SimpleBox
         :title="'etc'"
       >
