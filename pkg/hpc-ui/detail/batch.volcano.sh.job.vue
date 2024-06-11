@@ -265,104 +265,143 @@ export default {
       name="Summary"
       :weight="8"
     >
-      <LabeledInput
-        v-model="vcjob.metadata.uid"
-        :label="'JobID'"
-        :disabled="true"
-      />
-      <LabeledInput
-        v-model="vcjob.metadata.name"
-        :label="'JobName'"
-        :disabled="true"
-      />
-      <LabeledInput
-        v-if="vcjob.spec.tasks[0].template.spec.containers[0]?.securityContext?.runAsUser"
-        v-model="vcjob.spec.tasks[0].template.spec.containers[0].securityContext.runAsUser"
-        :label="'Owner uid'"
-        :mode="'view'"
-      />
-      <LabeledInput
-        v-model="vcjob.status.state.phase"
-        :label="'Status'"
-        :mode="'view'"
-      />
-      <LabeledInput
-        v-model="vcjob.detailsPage.nodes.length"
-        :label="'TotalNodes'"
-        :disabled="true"
-      />
-      <LabeledInput
-        v-model="vcjob.detailsPage.nodes"
-        :label="'NodeList'"
-        :disabled="true"
-      />
-      <!-- <SimpleBox
-        :title="'NodeList'"
+      <div
+        class="tab-header"
       >
-        <div>Pod List -> .spec.nodeName</div>
-        <span
-          v-for="(node, index) in vcjob.detailsPage.nodes"
-          :key="index"
-        >
-          {{ node }}
-        </span>
-      </SimpleBox> -->
-      <LabeledInput
-        v-model="vcjob.detailsPage.TotalCPUs"
-        :label="'TotalCPUs'"
-        :disabled="true"
-      />
-      <!-- <SimpleBox
-        :title="'TotalCPUs'"
-      >
-        <div> {{ vcjob.detailsPage.pods.length }} pods * each {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }} core(s) </div>
-        <div> = {{ vcjob.detailsPage.pods.length * vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
-      </SimpleBox> -->
-      <LabeledInput
-        v-model="vcjob.detailsPage.TotalCPUs"
-        :label="'Memory'"
-        :disabled="true"
-      />
-      <!-- <SimpleBox
-        :title="'Memory'"
-      >
-        <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || 'no value' }}</div>
-      </SimpleBox> -->
-      <LabeledInput
-        v-model="vcjob.detailsPage.CPU"
-        :label="'CPU'"
-        :disabled="true"
-      />
-      <!-- <SimpleBox
-        :title="'CPU'"
-      >
-        <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || 'no value' }}</div>
-      </SimpleBox> -->
-      <LabeledInput
-        v-model="vcjob.detailsPage.CPU"
-        :label="'Appname'"
-        :disabled="true"
-      />
-      <!-- <SimpleBox
-        :title="'Appname'"
-      >
-        <div>.metadata.labels[] | { ."helm.sh/chart" }</div>
-      </SimpleBox> -->
-      <LabeledInput
-        v-model="vcjob.detailsPage.Command"
-        :label="'Command'"
-        :disabled="true"
-      />
-      <!-- <SimpleBox
-        :title="'Command'"
-      >
-        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].command || 'no value' }}</div>
-      </SimpleBox> -->
-      <SimpleBox
-        :title="'etc'"
-      >
-        <div>Hello</div>
-      </SimpleBox>
+        <h2>
+          Summary
+          <i
+            v-if="tooltip"
+            v-clean-tooltip="tooltip"
+            class="icon icon-info icon-lg"
+          />
+        </h2>
+        <slot name="tab-header-right" />
+      </div>
+      <div>
+        <div class="row mb-20">
+          <LabeledInput
+            v-model="vcjob.metadata.uid"
+            :label="'JobID'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <LabeledInput
+            v-model="vcjob.metadata.name"
+            :label="'JobName'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <LabeledInput
+            v-if="vcjob.spec.tasks[0].template.spec.containers[0]?.securityContext?.runAsUser"
+            v-model="vcjob.spec.tasks[0].template.spec.containers[0].securityContext.runAsUser"
+            :label="'Owner uid'"
+            :mode="'view'"
+          />
+        </div>
+        <div class="row mb-20">
+          <LabeledInput
+            v-model="vcjob.status.state.phase"
+            :label="'Status'"
+            :mode="'view'"
+          />
+        </div>
+        <div class="row mb-20">
+          <LabeledInput
+            v-model="vcjob.detailsPage.nodes.length"
+            :label="'TotalNodes'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <LabeledInput
+            v-model="vcjob.detailsPage.nodes"
+            :label="'NodeList'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <!-- <SimpleBox
+            :title="'NodeList'"
+          >
+            <div>Pod List -> .spec.nodeName</div>
+            <span
+              v-for="(node, index) in vcjob.detailsPage.nodes"
+              :key="index"
+            >
+              {{ node }}
+            </span>
+          </SimpleBox> -->
+          <LabeledInput
+            v-model="vcjob.detailsPage.TotalCPUs"
+            :label="'TotalCPUs'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <!-- <SimpleBox
+            :title="'TotalCPUs'"
+          >
+            <div> {{ vcjob.detailsPage.pods.length }} pods * each {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }} core(s) </div>
+            <div> = {{ vcjob.detailsPage.pods.length * vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
+          </SimpleBox> -->
+          <LabeledInput
+            v-model="vcjob.detailsPage.TotalCPUs"
+            :label="'Memory'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <!-- <SimpleBox
+            :title="'Memory'"
+          >
+            <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || 'no value' }}</div>
+          </SimpleBox> -->
+          <LabeledInput
+            v-model="vcjob.detailsPage.CPU"
+            :label="'CPU'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <!-- <SimpleBox
+            :title="'CPU'"
+          >
+            <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || 'no value' }}</div>
+          </SimpleBox> -->
+          <LabeledInput
+            v-model="vcjob.detailsPage.CPU"
+            :label="'Appname'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <!-- <SimpleBox
+            :title="'Appname'"
+          >
+            <div>.metadata.labels[] | { ."helm.sh/chart" }</div>
+          </SimpleBox> -->
+          <LabeledInput
+            v-model="vcjob.detailsPage.Command"
+            :label="'Command'"
+            :disabled="true"
+          />
+        </div>
+        <div class="row mb-20">
+          <!-- <SimpleBox
+            :title="'Command'"
+          >
+            <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].command || 'no value' }}</div>
+          </SimpleBox> -->
+          <SimpleBox
+            :title="'etc'"
+          >
+            <div>Hello</div>
+          </SimpleBox>
+        </div>
+      </div>
     </Tab>
 
     <Tab
