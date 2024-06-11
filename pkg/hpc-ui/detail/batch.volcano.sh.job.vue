@@ -1,4 +1,5 @@
 <script>
+import ResourceTable from '@shell/components/ResourceTable';
 import CreateEditView from '@shell/mixins/create-edit-view';
 import Tab from '@shell/components/Tabbed/Tab';
 import ResourceTabs from '@shell/components/form/ResourceTabs';
@@ -6,7 +7,7 @@ import SortableTable from '@shell/components/SortableTable';
 import SimpleBox from '@shell/components/SimpleBox';
 import { LabeledInput } from '@components/Form/LabeledInput';
 import { TextAreaAutoGrow } from '@components/Form/TextArea';
-import { STATE, SIMPLE_NAME, IMAGE_NAME } from '@shell/config/table-headers';
+import { STATE, SIMPLE_NAME, IMAGE_NAME, KEY, VALUE } from '@shell/config/table-headers';
 import { sortableNumericSuffix } from '@shell/utils/sort';
 import { findBy } from '@shell/utils/array';
 import DashboardMetrics from '@shell/components/DashboardMetrics';
@@ -27,6 +28,7 @@ export default {
   name: 'VolcanoJobDetail',
 
   components: {
+    ResourceTable,
     DashboardMetrics,
     ResourceTabs,
     Tab,
@@ -83,6 +85,18 @@ export default {
       showProjectMetrics:              false,
       selection:                       POD_OPTION,
       metricsID:                       null,
+      infoTableHeaders: [
+        {
+          ...KEY,
+          label: '',
+          width: 200
+        },
+        {
+          ...VALUE,
+          label:       '',
+          dashIfEmpty: true,
+        }
+      ],
     };
   },
 
@@ -204,6 +218,10 @@ export default {
       ];
     },
 
+    // infoTableRows() {
+    //   return this.vcjob?.info;
+    // },
+
     graphVars() {
       return {
         namespace: this.value.namespace,
@@ -262,6 +280,44 @@ export default {
     :value="value"
   >
     <Tab
+      name="info"
+      :label="t('node.detail.tab.info.label')"
+      class="bordered-table"
+      :weight="9"
+    >
+      <ResourceTable
+        :v-if="vcjob.info"
+        key-field="_key"
+        sortkey="_abe"
+        :headers="infoTableHeaders"
+        :rows="vcjob.info"
+        :row-actions="false"
+        :table-actions="false"
+        :show-headers="false"
+        :search="false"
+      >
+        <template #cell:value="{row}">
+          <div
+            v-if="row.key=='Command'"
+          >
+            <TextAreaAutoGrow
+              v-model="row.value"
+              :disabled="disabled"
+              :mode="'view'"
+              :min-height="40"
+              :spellcheck="false"
+            />
+          </div>
+          <div
+            v-else
+          >
+            {{ row.value }}
+          </div>
+        </template>
+      </ResourceTable>
+    </Tab>
+
+    <Tab
       name="Summary"
       :weight="8"
     >
@@ -270,11 +326,6 @@ export default {
       >
         <h2>
           Summary
-          <i
-            v-if="tooltip"
-            v-clean-tooltip="tooltip"
-            class="icon icon-info icon-lg"
-          />
         </h2>
         <slot name="tab-header-right" />
       </div>
@@ -283,19 +334,21 @@ export default {
           <LabeledInput
             v-model="vcjob.metadata.uid"
             :label="'JobID'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">
           <LabeledInput
             v-model="vcjob.metadata.name"
             :label="'JobName'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
-        <div class="row mb-20">
+        <div
+          v-if="vcjob.spec.tasks[0].template.spec.containers[0]?.securityContext?.runAsUser"
+          class="row mb-20"
+        >
           <LabeledInput
-            v-if="vcjob.spec.tasks[0].template.spec.containers[0]?.securityContext?.runAsUser"
             v-model="vcjob.spec.tasks[0].template.spec.containers[0].securityContext.runAsUser"
             :label="'Owner uid'"
             :mode="'view'"
@@ -312,14 +365,14 @@ export default {
           <LabeledInput
             v-model="vcjob.detailsPage.nodes.length"
             :label="'TotalNodes'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">
           <LabeledInput
             v-model="vcjob.detailsPage.nodes"
             :label="'NodeList'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">
@@ -337,7 +390,7 @@ export default {
           <LabeledInput
             v-model="vcjob.detailsPage.TotalCPUs"
             :label="'TotalCPUs'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">
@@ -350,7 +403,7 @@ export default {
           <LabeledInput
             v-model="vcjob.detailsPage.TotalCPUs"
             :label="'Memory'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">
@@ -362,7 +415,7 @@ export default {
           <LabeledInput
             v-model="vcjob.detailsPage.CPU"
             :label="'CPU'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">
@@ -374,7 +427,7 @@ export default {
           <LabeledInput
             v-model="vcjob.detailsPage.CPU"
             :label="'Appname'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">
@@ -386,7 +439,7 @@ export default {
           <LabeledInput
             v-model="vcjob.detailsPage.Command"
             :label="'Command'"
-            :disabled="true"
+            :mode="'view'"
           />
         </div>
         <div class="row mb-20">

@@ -159,7 +159,7 @@ export default class VolcanoJob extends SteveModel {
       return P.spec?.nodeName;
     });
 
-    nodes = [...new Set(nodes)];
+    nodes = [...new Set(nodes)].join(', ');
 
     const CPU = this.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || 'no value';
     const TotalCPUs = pods.length * CPU || 'no value';
@@ -178,6 +178,56 @@ export default class VolcanoJob extends SteveModel {
     };
   }
 
+  get info() {
+    const details = [
+      {
+        key:   'JobID',
+        value: this.metadata.uid
+      },
+      {
+        key:   'JobName',
+        value: this.metadata.name
+      },
+      {
+        key:   'Owner uid',
+        value: this.spec.tasks?.[0].template.spec.containers?.[0]?.securityContext?.runAsUser
+      },
+      {
+        key:   'Status',
+        value: this.status.state.phase
+      },
+      {
+        key:   'TotalNodes',
+        value: this.detailsPage.nodes.length
+      },
+      {
+        key:   'NodeList',
+        value: this.detailsPage.nodes
+      },
+      {
+        key:   'TotalCPUs',
+        value: this.detailsPage.TotalCPUs
+      },
+      {
+        key:   'Memory',
+        value: this.detailsPage.Memory
+      },
+      {
+        key:   'CPU',
+        value: this.detailsPage.CPU
+      },
+      {
+        key:   'Appname',
+        value: 'C2 Not ready'
+      },
+      {
+        key:   'Command',
+        value: this.detailsPage.Command
+      },
+    ];
+
+    return details;
+  }
   // get nodeList() {
   //   const pods = this.relatedResource.pod;
   //   const nodes = pods.map((P) => {
