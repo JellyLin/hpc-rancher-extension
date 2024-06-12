@@ -1,6 +1,6 @@
 <script>
 import { NODE } from '@shell/config/types';
-import { RaidCliService } from '../eonone2/raid-cli-service';
+import { RaidCliAPI } from '../eonone2/raid-cli-api';
 import { EonOneJobService } from '../eonone2/eonkube-service';
 // import { NODE_ROLES } from '@shell/config/labels-annotations.js';
 export const NODE_ROLES = {
@@ -29,15 +29,15 @@ export default {
 
   data() {
     const principal = this.$store.getters['rancher/byId']('principal', this.$store.getters['auth/principalId']);
-    const showExternalStorage = RaidCliService.showExternalStorage;
-    const openFileExplorer = RaidCliService.openFileExplorer;
-    const deleteMap = RaidCliService.deleteMap;
+    const showExternalStorage = RaidCliAPI.showExternalStorage;
+    const openFileExplorer = RaidCliAPI.openFileExplorer;
+    const deleteMap = RaidCliAPI.deleteMap;
     console.log(this);
 
     return {
       principal,
       scmgmtIP:         '',
-      RaidCliService,
+      RaidCliAPI,
       EonOneJobAPI: '',
       cmd:              { openFileExplorer, showExternalStorage, deleteMap }
     };
@@ -81,7 +81,7 @@ export default {
       <li><a :href="`http://172.24.110.128:8989?token=abc&username=${principal.loginName}`" target="_blank">6. Redirect UI to GSx FileExplorer with token</a></li>
     </ul>
     <ul>
-      <li v-for="(item, index) in RaidCliService" :key="index">
+      <li v-for="(item, index) in RaidCliAPI" :key="index">
         {{ item }}
       </li>
       <li v-for="(item, index) in cmd" :key="index">
