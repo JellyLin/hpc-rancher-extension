@@ -980,11 +980,6 @@ export interface ActiveLVMParam {
   force: string;
 }
 
-export interface ShowExternalStorageParam {
-  ip: string;
-  uid: string;
-}
-
 export interface openFileExplorerParam {
   deviceId: string;
   path: string;

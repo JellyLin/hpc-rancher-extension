@@ -4,7 +4,7 @@ import { NODE } from '@shell/config/types';
 // import { fetchOrCreateSetting } from '@shell/utils/settings';
 import { createYamlWithOptions } from '@shell/utils/create-yaml';
 import { RaidCliCmd } from './interface/raid-cli-cmd';
-import { newRaidCmd } from './raid-cli-service';
+import { newRaidCmd } from './raid-cli-api';
 // import { stringify } from '@shell/utils/error';
 // import Resource from '@shell/plugins/dashboard-store/resource-class';
 
@@ -68,8 +68,8 @@ function getEonOneIp(store: any) {
   const headNode = allNodes.filter((n: { metadata: { labels: { [x: string]: any; }; }; }) => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
-  // return (scmgmtIP === '') ? scmgmtIP : '172.27.118.101';
-  return (scmgmtIP === '') ? scmgmtIP : '172.27.12.113';
+  return (scmgmtIP === '') ? scmgmtIP : '172.27.118.101';
+  // return (scmgmtIP === '') ? scmgmtIP : '172.27.12.113';
 }
 
 function getEonOneDevId(store: any) {
