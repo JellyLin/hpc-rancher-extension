@@ -1048,3 +1048,16 @@ export interface SetLdSedForceDisableParam{
   ldList: any;
 }
 
+export interface showExternalStorageParam{
+  ip: string;
+  uid: string;
+}
+
+export interface k8sApiKubectlGetConfigmapParam{
+  configmapName: string;
+}
+
+export interface k8sApiKubectlEditConfigmapParam{
+  configmapName: string;
+  storageList: string;
+}

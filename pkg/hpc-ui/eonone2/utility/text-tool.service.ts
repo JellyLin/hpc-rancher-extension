@@ -10,6 +10,11 @@ export class TextToolService {
     });
   }
 
+  static quotation(text:string | undefined): string {
+    if(typeof text == undefined) return '';
+    return `"${(text as string).replace(/\"/gi, '\\\"')}"`;
+  }
+
   static convertArrayToString(arr: Array<any>, signal: string): string {
     const spliter = (signal != null) ? signal : ' ';
     return arr.join(spliter);
