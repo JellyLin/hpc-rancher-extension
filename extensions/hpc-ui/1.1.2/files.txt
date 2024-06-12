@@ -1,0 +1,11 @@
+plugin/hpc-ui-1.1.2.umd.min.3.js
+plugin/hpc-ui-1.1.2.umd.min.3.js.map
+plugin/hpc-ui-1.1.2.umd.min.4.js
+plugin/hpc-ui-1.1.2.umd.min.4.js.map
+plugin/hpc-ui-1.1.2.umd.min.detail.js
+plugin/hpc-ui-1.1.2.umd.min.detail.js.map
+plugin/hpc-ui-1.1.2.umd.min.js
+plugin/hpc-ui-1.1.2.umd.min.js.map
+plugin/hpc-ui-1.1.2.umd.min.vendors~detail.js
+plugin/hpc-ui-1.1.2.umd.min.vendors~detail.js.map
+plugin/package.json
