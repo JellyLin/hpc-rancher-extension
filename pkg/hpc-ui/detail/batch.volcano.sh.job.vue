@@ -302,7 +302,6 @@ export default {
           >
             <TextAreaAutoGrow
               v-model="row.value"
-              :disabled="disabled"
               :mode="'view'"
               :min-height="40"
               :spellcheck="false"
@@ -316,147 +315,7 @@ export default {
         </template>
       </ResourceTable>
     </Tab>
-
-    <Tab
-      name="Summary"
-      :weight="8"
-    >
-      <div
-        class="tab-header"
-      >
-        <h2>
-          Summary
-        </h2>
-        <slot name="tab-header-right" />
-      </div>
-      <div>
-        <div class="row mb-20">
-          <LabeledInput
-            v-model="vcjob.metadata.uid"
-            :label="'JobID'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <LabeledInput
-            v-model="vcjob.metadata.name"
-            :label="'JobName'"
-            :mode="'view'"
-          />
-        </div>
-        <div
-          v-if="vcjob.spec.tasks[0].template.spec.containers[0]?.securityContext?.runAsUser"
-          class="row mb-20"
-        >
-          <LabeledInput
-            v-model="vcjob.spec.tasks[0].template.spec.containers[0].securityContext.runAsUser"
-            :label="'Owner uid'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <LabeledInput
-            v-model="vcjob.status.state.phase"
-            :label="'Status'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <LabeledInput
-            v-model="vcjob.detailsPage.nodes.length"
-            :label="'TotalNodes'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <LabeledInput
-            v-model="vcjob.detailsPage.nodes"
-            :label="'NodeList'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <!-- <SimpleBox
-            :title="'NodeList'"
-          >
-            <div>Pod List -> .spec.nodeName</div>
-            <span
-              v-for="(node, index) in vcjob.detailsPage.nodes"
-              :key="index"
-            >
-              {{ node }}
-            </span>
-          </SimpleBox> -->
-          <LabeledInput
-            v-model="vcjob.detailsPage.TotalCPUs"
-            :label="'TotalCPUs'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <!-- <SimpleBox
-            :title="'TotalCPUs'"
-          >
-            <div> {{ vcjob.detailsPage.pods.length }} pods * each {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }} core(s) </div>
-            <div> = {{ vcjob.detailsPage.pods.length * vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
-          </SimpleBox> -->
-          <LabeledInput
-            v-model="vcjob.detailsPage.TotalCPUs"
-            :label="'Memory'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <!-- <SimpleBox
-            :title="'Memory'"
-          >
-            <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || 'no value' }}</div>
-          </SimpleBox> -->
-          <LabeledInput
-            v-model="vcjob.detailsPage.CPU"
-            :label="'CPU'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <!-- <SimpleBox
-            :title="'CPU'"
-          >
-            <div>request: {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || 'no value' }}</div>
-          </SimpleBox> -->
-          <LabeledInput
-            v-model="vcjob.detailsPage.CPU"
-            :label="'Appname'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <!-- <SimpleBox
-            :title="'Appname'"
-          >
-            <div>.metadata.labels[] | { ."helm.sh/chart" }</div>
-          </SimpleBox> -->
-          <LabeledInput
-            v-model="vcjob.detailsPage.Command"
-            :label="'Command'"
-            :mode="'view'"
-          />
-        </div>
-        <div class="row mb-20">
-          <!-- <SimpleBox
-            :title="'Command'"
-          >
-            <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].command || 'no value' }}</div>
-          </SimpleBox> -->
-          <SimpleBox
-            :title="'etc'"
-          >
-            <div>Hello</div>
-          </SimpleBox>
-        </div>
-      </div>
-    </Tab>
-
+<!-- 
     <Tab
       name="Parameters"
       :weight="7"
@@ -526,7 +385,7 @@ export default {
         <li>Job Logs</li>
         <li>Console output</li>
       </ul>
-    </Tab>
+    </Tab> -->
 
     <Tab
       :label="'Files'"
@@ -583,7 +442,7 @@ export default {
       </ul>
     </Tab>
 
-    <Tab
+    <!-- <Tab
       :label="t('workload.container.titles.containers')"
       name="containers"
       :weight="3"
@@ -597,7 +456,7 @@ export default {
         :row-actions="true"
         :table-actions="false"
       />
-    </Tab>
+    </Tab> -->
     <Tab
       v-if="v1MonitoringUrl"
       name="v1Metrics"
@@ -618,7 +477,7 @@ export default {
         />
       </div>
     </Tab>
-    <Tab
+    <!-- <Tab
       v-if="showMetrics"
       :label="t('workload.container.titles.metrics')"
       name="pod-metrics"
@@ -649,7 +508,7 @@ export default {
           graph-height="550px"
         />
       </template>
-    </Tab>
+    </Tab> -->
   </ResourceTabs>
 </template>
 <style scoped>
