@@ -143,6 +143,101 @@ export default class VolcanoJob extends SteveModel {
     });
   }
 
+  get detailsPage() {
+    const podList = this.$rootGetters['cluster/all'](`Pod`);
+    const uid = this.metadata.uid;
+    const pods = podList.filter((P) => {
+      // return true;
+      return (
+        P.metadata?.ownerReferences &&
+        P.metadata?.ownerReferences.find((r) => {
+          return r.uid === uid;
+        })
+      );
+    });
+    let nodes = pods.map((P) => {
+      return P.spec?.nodeName;
+    });
+
+    nodes = [...new Set(nodes)].join(', ');
+
+    const CPU = this.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || 'no value';
+    const TotalCPUs = pods.length * CPU || 'no value';
+    const Memory = this.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || 'no value';
+    const Appname = '.metadata.labels[] | { ."helm.sh/chart" }';
+    const Command = this.spec.tasks?.[0].template.spec.containers?.[0].command || 'no value';
+
+    return {
+      pods,
+      nodes,
+      CPU,
+      TotalCPUs,
+      Memory,
+      Appname,
+      Command,
+    };
+  }
+
+  get info() {
+    const details = [
+      {
+        key:   'JobID',
+        value: this.metadata.uid
+      },
+      {
+        key:   'JobName',
+        value: this.metadata.name
+      },
+      {
+        key:   'Owner uid',
+        value: this.spec.tasks?.[0].template.spec.containers?.[0]?.securityContext?.runAsUser
+      },
+      {
+        key:   'Status',
+        value: this.status.state.phase
+      },
+      {
+        key:   'TotalNodes',
+        value: this.detailsPage.nodes.length
+      },
+      {
+        key:   'NodeList',
+        value: this.detailsPage.nodes
+      },
+      {
+        key:   'TotalCPUs',
+        value: this.detailsPage.TotalCPUs
+      },
+      {
+        key:   'Memory',
+        value: this.detailsPage.Memory
+      },
+      {
+        key:   'CPU',
+        value: this.detailsPage.CPU
+      },
+      {
+        key:   'Appname',
+        value: 'C2 Not ready'
+      },
+      {
+        key:   'Command',
+        value: this.detailsPage.Command
+      },
+    ];
+
+    return details;
+  }
+  // get nodeList() {
+  //   const pods = this.relatedResource.pod;
+  //   const nodes = pods.map((P) => {
+  //     return P.metadata?.nodeName;
+  //   });
+  //   const uniqueNode = [...new Set(nodes)];
+
+  //   return uniqueNode;
+  // }
+
   get vncURL() {
     const vcjob = this;
     let url = ``;

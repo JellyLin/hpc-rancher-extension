@@ -1,4 +1,5 @@
 <script>
+import ResourceTable from '@shell/components/ResourceTable';
 import CreateEditView from '@shell/mixins/create-edit-view';
 import Tab from '@shell/components/Tabbed/Tab';
 import ResourceTabs from '@shell/components/form/ResourceTabs';
@@ -6,7 +7,7 @@ import SortableTable from '@shell/components/SortableTable';
 import SimpleBox from '@shell/components/SimpleBox';
 import { LabeledInput } from '@components/Form/LabeledInput';
 import { TextAreaAutoGrow } from '@components/Form/TextArea';
-import { STATE, SIMPLE_NAME, IMAGE_NAME } from '@shell/config/table-headers';
+import { STATE, SIMPLE_NAME, IMAGE_NAME, KEY, VALUE } from '@shell/config/table-headers';
 import { sortableNumericSuffix } from '@shell/utils/sort';
 import { findBy } from '@shell/utils/array';
 import DashboardMetrics from '@shell/components/DashboardMetrics';
@@ -27,6 +28,7 @@ export default {
   name: 'VolcanoJobDetail',
 
   components: {
+    ResourceTable,
     DashboardMetrics,
     ResourceTabs,
     Tab,
@@ -40,6 +42,8 @@ export default {
   mixins: [CreateEditView, V1WorkloadMetrics],
 
   async fetch() {
+    console.log(this);
+    console.log(this.$store);
     this.showMetrics = await allDashboardsExist(this.$store, this.currentCluster.id, [POD_METRICS_DETAIL_URL, POD_METRICS_SUMMARY_URL]);
     if (!this.showMetrics) {
       const namespace = await this.$store.dispatch('cluster/find', { type: NAMESPACE, id: this.value.metadata.namespace });
@@ -52,6 +56,13 @@ export default {
 
         this.showProjectMetrics = await allDashboardsExist(this.$store, this.currentCluster.id, [this.POD_PROJECT_METRICS_DETAIL_URL, this.POD_PROJECT_METRICS_SUMMARY_URL], 'cluster', projectId);
       }
+    }
+    const inStore = this.$store.getters['currentProduct'].inStore;
+
+    if (this.$store.getters[`${ inStore }/schemaFor`](`Pod`)) {
+      await this.$store.dispatch(`${ inStore }/findAll`, {
+        type: 'pod'
+      });
     }
   },
 
@@ -74,6 +85,18 @@ export default {
       showProjectMetrics:              false,
       selection:                       POD_OPTION,
       metricsID:                       null,
+      infoTableHeaders: [
+        {
+          ...KEY,
+          label: '',
+          width: 200
+        },
+        {
+          ...VALUE,
+          label:       '',
+          dashIfEmpty: true,
+        }
+      ],
     };
   },
 
@@ -195,6 +218,10 @@ export default {
       ];
     },
 
+    // infoTableRows() {
+    //   return this.vcjob?.info;
+    // },
+
     graphVars() {
       return {
         namespace: this.value.namespace,
@@ -253,72 +280,42 @@ export default {
     :value="value"
   >
     <Tab
-      name="Summary"
-      :weight="8"
+      name="info"
+      :label="t('node.detail.tab.info.label')"
+      class="bordered-table"
+      :weight="9"
     >
-      <LabeledInput
-        v-model="vcjob.metadata.uid"
-        :label="'JobID'"
-        :disabled="true"
-      />
-      <LabeledInput
-        v-model="vcjob.metadata.name"
-        :label="'JobName'"
-        :disabled="true"
-      />
-      <LabeledInput
-        v-if="vcjob.spec.tasks[0].template.spec.containers[0]?.securityContext?.runAsUser"
-        v-model="vcjob.spec.tasks[0].template.spec.containers[0].securityContext.runAsUser"
-        :label="'Owner uid'"
-        :mode="'view'"
-      />
-      <LabeledInput
-        v-model="vcjob.status.state"
-        :label="'Status'"
-        :mode="'view'"
-      />
-      <SimpleBox
-        :title="'TotalNodes'"
+      <ResourceTable
+        :v-if="vcjob.info"
+        key-field="_key"
+        sortkey="_abe"
+        :headers="infoTableHeaders"
+        :rows="vcjob.info"
+        :row-actions="false"
+        :table-actions="false"
+        :show-headers="false"
+        :search="false"
       >
-        <div> count of node list </div>
-      </SimpleBox>
-      <SimpleBox
-        :title="'NodeList'"
-      >
-        <div>Pod List -> .spec.nodeName</div>
-      </SimpleBox>
-      <SimpleBox
-        :title="'TotalCPUs'"
-      >
-        <div>n pods * {{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
-      </SimpleBox>
-      <SimpleBox
-        :title="'Memory'"
-      >
-        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.memory || '' }}</div>
-      </SimpleBox>
-      <SimpleBox
-        :title="'CPU'"
-      >
-        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].resources?.requests?.cpu || '' }}</div>
-      </SimpleBox>
-      <SimpleBox
-        :title="'Appname'"
-      >
-        <div>.metadata.labels[] | { ."helm.sh/chart" }</div>
-      </SimpleBox>
-      <SimpleBox
-        :title="'Command'"
-      >
-        <div>{{ vcjob.spec.tasks?.[0].template.spec.containers?.[0].command || '' }}</div>
-      </SimpleBox>
-      <SimpleBox
-        :title="'etc'"
-      >
-        <div>Hello</div>
-      </SimpleBox>
+        <template #cell:value="{row}">
+          <div
+            v-if="row.key=='Command'"
+          >
+            <TextAreaAutoGrow
+              v-model="row.value"
+              :mode="'view'"
+              :min-height="40"
+              :spellcheck="false"
+            />
+          </div>
+          <div
+            v-else
+          >
+            {{ row.value }}
+          </div>
+        </template>
+      </ResourceTable>
     </Tab>
-
+<!-- 
     <Tab
       name="Parameters"
       :weight="7"
@@ -388,7 +385,7 @@ export default {
         <li>Job Logs</li>
         <li>Console output</li>
       </ul>
-    </Tab>
+    </Tab> -->
 
     <Tab
       :label="'Files'"
@@ -445,7 +442,7 @@ export default {
       </ul>
     </Tab>
 
-    <Tab
+    <!-- <Tab
       :label="t('workload.container.titles.containers')"
       name="containers"
       :weight="3"
@@ -459,7 +456,7 @@ export default {
         :row-actions="true"
         :table-actions="false"
       />
-    </Tab>
+    </Tab> -->
     <Tab
       v-if="v1MonitoringUrl"
       name="v1Metrics"
@@ -480,7 +477,7 @@ export default {
         />
       </div>
     </Tab>
-    <Tab
+    <!-- <Tab
       v-if="showMetrics"
       :label="t('workload.container.titles.metrics')"
       name="pod-metrics"
@@ -511,7 +508,7 @@ export default {
           graph-height="550px"
         />
       </template>
-    </Tab>
+    </Tab> -->
   </ResourceTabs>
 </template>
 <style scoped>
