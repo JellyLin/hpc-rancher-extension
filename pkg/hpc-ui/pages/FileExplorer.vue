@@ -19,7 +19,7 @@ function getEonOneIp(store) {
   const headNode = allNodes.filter(n => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
-  return (scmgmtIP === '') ? scmgmtIP : '172.27.118.101';
+  return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
   // return (scmgmtIP === '') ? scmgmtIP : '172.27.12.113';
 }
 
@@ -31,7 +31,7 @@ export default {
     const principal = this.$store.getters['rancher/byId']('principal', this.$store.getters['auth/principalId']);
     const showExternalStorage = RaidCliAPI.showExternalStorage;
     const openFileExplorer = RaidCliAPI.openFileExplorer;
-    const deleteMap = RaidCliAPI.deleteMap;
+    const hpcGet = RaidCliAPI.hpcGet;
     console.log(this);
 
     return {
@@ -39,7 +39,7 @@ export default {
       scmgmtIP:         '',
       RaidCliAPI,
       EonOneJobAPI: '',
-      cmd:              { openFileExplorer, showExternalStorage, deleteMap }
+      cmd:              { openFileExplorer, showExternalStorage, hpcGet }
     };
   },
 
