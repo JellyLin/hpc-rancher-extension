@@ -1,7 +1,7 @@
 <script>
 import { NODE } from '@shell/config/types';
 import { RaidCliAPI } from '../eonone2/raid-cli-api';
-import { EonOneJobService } from '../eonone2/eonkube-service';
+import { EonOneService } from '../eonone2/eonkube-service';
 // import { NODE_ROLES } from '@shell/config/labels-annotations.js';
 export const NODE_ROLES = {
   CONTROL_PLANE_OLD: 'node-role.kubernetes.io/controlplane',
@@ -19,8 +19,8 @@ function getEonOneIp(store) {
   const headNode = allNodes.filter(n => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
-  return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
-  // return (scmgmtIP === '') ? scmgmtIP : '172.27.12.113';
+  // return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
+  return (scmgmtIP !== '') ? scmgmtIP : '172.27.12.113';
 }
 
 export default {
@@ -49,15 +49,20 @@ export default {
     if (this.$store.getters[`${ inStore }/schemaFor`](NODE)) {
       this.scmgmtIP = await getEonOneIp(this.$store);
     }
-    this.EonOneJobAPI = new EonOneJobService(undefined, this.$store);
-    // this.EonOneJobAPI = new EonOneJobService(this.scmgmtIP, this.$store);
+    this.EonOneJobAPI = new EonOneService(undefined, this.$store);
+    // this.EonOneJobAPI = new EonOneService(this.scmgmtIP, this.$store);
   },
 
   methods: {
     callApiBtn(cmd) {
       console.log(cmd.name); // 'showExternalStorage'
+      // this.EonOneJobAPI.executeJob(cmd.name);
       // this.EonOneJobAPI.showExternalStorage();
-      this.EonOneJobAPI.executeJob(cmd.name);
+      const cc = this.EonOneJobAPI.getCmdParam(cmd.name);
+
+      cc.key = cmd.name;
+
+      this.EonOneJobAPI.executeCmd(cc);
     }
   },
 
