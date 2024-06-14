@@ -72,10 +72,10 @@ export default {
 
         switch (cmd.name) {
         case 'openFileExplorer':
-          url = data.url || 'https://172.24.110.128:8991/login.php?key=';
           if (data.token !== ``) {
+            url = data.url || `https://172.24.110.128:8991/login.php?key=${ data.token }`;
             window.open(
-              url + data.token,
+              url,
               '_blank',
               'toolbars=0,width=1280,height=880,left=0,top=0,noreferrer'
             );
