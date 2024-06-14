@@ -1,7 +1,7 @@
 <script>
 import { NODE } from '@shell/config/types';
 import { RaidCliAPI } from '../eonone2/raid-cli-api';
-import { EonOneJobService } from '../eonone2/eonkube-service';
+import { EonOneService } from '../eonone2/eonkube-service';
 // import { NODE_ROLES } from '@shell/config/labels-annotations.js';
 export const NODE_ROLES = {
   CONTROL_PLANE_OLD: 'node-role.kubernetes.io/controlplane',
@@ -19,8 +19,8 @@ function getEonOneIp(store) {
   const headNode = allNodes.filter(n => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
-  return (scmgmtIP === '') ? scmgmtIP : '172.27.118.101';
-  // return (scmgmtIP === '') ? scmgmtIP : '172.27.12.113';
+  return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
+  // return (scmgmtIP !== '') ? scmgmtIP : '172.27.12.113';
 }
 
 export default {
@@ -31,7 +31,7 @@ export default {
     const principal = this.$store.getters['rancher/byId']('principal', this.$store.getters['auth/principalId']);
     const showExternalStorage = RaidCliAPI.showExternalStorage;
     const openFileExplorer = RaidCliAPI.openFileExplorer;
-    const deleteMap = RaidCliAPI.deleteMap;
+    const hpcGet = RaidCliAPI.hpcGet;
     console.log(this);
 
     return {
@@ -39,7 +39,7 @@ export default {
       scmgmtIP:         '',
       RaidCliAPI,
       EonOneJobAPI: '',
-      cmd:              { openFileExplorer, showExternalStorage, deleteMap }
+      cmd:              { openFileExplorer, showExternalStorage, hpcGet }
     };
   },
 
@@ -49,15 +49,39 @@ export default {
     if (this.$store.getters[`${ inStore }/schemaFor`](NODE)) {
       this.scmgmtIP = await getEonOneIp(this.$store);
     }
-    this.EonOneJobAPI = new EonOneJobService(undefined, this.$store);
-    // this.EonOneJobAPI = new EonOneJobService(this.scmgmtIP, this.$store);
+    this.EonOneJobAPI = new EonOneService(undefined, this.$store);
+    // this.EonOneJobAPI = new EonOneService(this.scmgmtIP, this.$store);
   },
 
   methods: {
+    callFileExplorerBtn() {
+      // const args = CmdToParam.openFileExplorer;
+      const args = {
+        path: $('#FileExplorerPath').val()
+      };
+
+      this.callApiBtn({ name: 'openFileExplorer', params: args });
+    },
     callApiBtn(cmd) {
-      console.log(cmd.name); // 'showExternalStorage'
-      // this.EonOneJobAPI.showExternalStorage();
-      this.EonOneJobAPI.executeJob(cmd.name);
+      const cc = this.EonOneJobAPI.getCmdParam(cmd.name, cmd?.params);
+      const response = this.EonOneJobAPI.executeCmd(cc);
+
+      response.then((data) => {
+        let url;
+
+        switch (cmd.name) {
+        case 'openFileExplorer':
+          if (data.token !== ``) {
+            url = data.url || `https://172.24.110.128:8991/login.php?key=${ data.token }`;
+            window.open(
+              url,
+              '_blank',
+              'toolbars=0,width=1280,height=880,left=0,top=0,noreferrer'
+            );
+          }
+          break;
+        }
+      });
     }
   },
 
@@ -81,9 +105,11 @@ export default {
       <li><a :href="`http://172.24.110.128:8989?token=abc&username=${principal.loginName}`" target="_blank">6. Redirect UI to GSx FileExplorer with token</a></li>
     </ul>
     <ul>
-      <li v-for="(item, index) in RaidCliAPI" :key="index">
-        {{ item }}
-      </li>
+      <input id="FileExplorerPath" placeholder="${principal.loginName}'s home folder">
+      <button @click="callFileExplorerBtn()">
+        Open FileExplorer with path
+      </button>
+      <br>
       <li v-for="(item, index) in cmd" :key="index">
         <div v-if="true">
           <span>{{ item }}</span>
