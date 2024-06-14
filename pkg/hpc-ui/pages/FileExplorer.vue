@@ -19,8 +19,7 @@ function getEonOneIp(store) {
   const headNode = allNodes.filter(n => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
-  return '172.27.12.113';
-  // return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
+  return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
   // return (scmgmtIP !== '') ? scmgmtIP : '172.27.12.113';
 }
 
