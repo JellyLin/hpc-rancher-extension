@@ -800,6 +800,22 @@ export interface FssK8sCsiScDeleteParam {
   n: string;
 }
 
+export interface FssK8sCsiExStorageMountParam {
+  s: string;
+  i: string;
+  t: string;
+  d: string;
+  c: string;
+}
+export interface FssK8sCsiExStorageUnmountParam {
+  s: string;
+  d: string;
+}
+export interface FssK8sCsiExStorageStatusParam {
+  s: string;
+  d: string;
+}
+
 export interface k8sApiDeployAppserverParam {
   address: string;
   port: string;
@@ -982,5 +998,21 @@ export interface ActiveLVMParam {
 
 export interface openFileExplorerParam {
   deviceId: string;
+  ip: string;
+  identity: string;
   path: string;
+}
+
+export interface hpcApplyParam {
+  plugins?: string;
+  service?: string;
+  deviceId?: string;
+  projectName?: string;
+  folder?: string;
+  homeFolder?: string;
+  appFolder?: string;
+}
+
+export interface hpcRemoveParam {
+  deviceId: string;
 }
