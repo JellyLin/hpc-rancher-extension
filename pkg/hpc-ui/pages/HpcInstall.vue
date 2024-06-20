@@ -7,7 +7,7 @@ import Select from "@shell/components/form/Select.vue";
 import Mount from "@shell/edit/workload/storage/Mount";
 import TextAreaAutoGrow from "@components/Form/TextArea/TextAreaAutoGrow.vue";
 import { mapGetters } from "vuex";
-import removeObject from "@shell/utils/array";
+import { removeObject } from "@shell/utils/array";
 import ChartMixin from "@shell/mixins/chart";
 import { clone, diff, get, set } from "@shell/utils/object";
 import { LINUX, WINDOWS } from "@shell/store/catalog";
