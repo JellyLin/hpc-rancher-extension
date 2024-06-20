@@ -10,6 +10,8 @@ import {
 import Vue from 'vue';
 import SteveModel from '@shell/plugins/steve/steve-class';
 import { STATES_ENUM } from '@shell/plugins/dashboard-store/resource-class';
+import { EonOneService } from "../eonone2/eonkube-service";
+// import { EonOneService } from '../eonone2/eonkube-service';
 
 const INGRESS = 'networking.k8s.io.ingress';
 const AnnotationsKeyChartName = 'meta.helm.sh/release-name';
@@ -334,15 +336,25 @@ export default class VolcanoJob extends SteveModel {
   }
 
   pause() {
-    // TODO pause this
+    // FIXME dispatch is diff with sendUrl
+    this.$state.getters = this.$rootGetters;
+    this.$state.dispatch = this.$dispatch;
+    const eonkube = new EonOneService(`172.27.118.101`, this.$state)
+    const cmd = eonkube.getCmdParam(`vcctlPause`, {name: this.metadata.name, namespace: this.metadata.namespace});
+    eonkube.executeCmd(cmd);
   }
 
   resume() {
-    // TODO resume this
+    // FIXME dispatch is diff with sendUrl
+    this.$state.getters = this.$rootGetters;
+    this.$state.dispatch = this.$dispatch;
+    const eonkube = new EonOneService(`172.27.118.101`, this.$state)
+    const cmd = eonkube.getCmdParam(`vcctlResume`, {name: this.metadata.name, namespace: this.metadata.namespace});
+    eonkube.executeCmd(cmd);
   }
 
   test() {
-    console.log(this);
-    console.log(`this is test method`);
+    // FIXME test only
+    this.resume();
   }
 }
