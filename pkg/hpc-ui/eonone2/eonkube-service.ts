@@ -246,10 +246,10 @@ export class EonOneService {
     }
   }
 
-  private async sendCmd(jobId: string) {
+  private async sendCmd(id: string) {
     try {
       const requestOptions = {
-        url: `meta/proxy/http:/${this.scmgmtIP}:8816/eonkube/cmd/${jobId}`,
+        url: `meta/proxy/http:/${this.scmgmtIP}:8816/eonkube/cmd/${id}`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       };
