@@ -6,7 +6,7 @@ import { createYamlWithOptions } from '@shell/utils/create-yaml';
 import { RaidCliCmd } from './interface/raid-cli-cmd';
 import { RaidCliAPI } from './raid-cli-api';
 import { showExternalStorageParam } from './interface/cmd-param-raid';
-import { hpcApplyParam, hpcRemoveParam, openFileExplorerParam } from './interface/cmd-param-fss';
+import { hpcApplyParam, hpcRemoveParam, openFileExplorerParam, FssK8sCsiExStorageMountParam, vcctlParam } from './interface/cmd-param-fss';
 // import { stringify } from '@shell/utils/error';
 // import Resource from '@shell/plugins/dashboard-store/resource-class';
 
@@ -19,6 +19,8 @@ export const NODE_ROLES = {
   SCMGMT_IP: 'node-role.cluster/scmgmt-ip',
 };
 
+const configmapInNamespace = `autotest-eonkube-job`;
+
 // use Connie API
 function getEonOneIp(store: any) {
   const inStore = store.getters['currentProduct'].inStore;
@@ -26,7 +28,7 @@ function getEonOneIp(store: any) {
   const headNode = allNodes.filter((n: { metadata: { labels: { [x: string]: any; }; }; }) => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
-  return (scmgmtIP === '') ? scmgmtIP : '172.27.118.101';
+  return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
   // return (scmgmtIP === '') ? scmgmtIP : '172.27.12.113';
 }
 
@@ -52,6 +54,9 @@ interface CmdToParam {
   hpcGet: never;
   hpcApply: hpcApplyParam;
   hpcRemove: hpcRemoveParam;
+  fssK8sCsiExStorageMount: FssK8sCsiExStorageMountParam;
+  vcctlResume: vcctlParam;
+  vcctlPause: vcctlParam;
 }
 
 type CmdKey = keyof CmdToParam;
@@ -91,7 +96,6 @@ export class EonOneService {
   private createCmdYaml(raidCLiCmd: RaidCliCmd, JOB_ID: string): object {
     // const key = raidCLiCmd.key;
     const data = raidCLiCmd.param || {};
-
     data.cmdKey = raidCLiCmd.key;
 
     // const dataStr = JSON.stringify(data);
@@ -102,7 +106,7 @@ export class EonOneService {
       kind: 'ConfigMap',
       metadata: {
         name: JOB_ID,
-        namespace: 'autotest-eonkube-job'
+        namespace: configmapInNamespace
       }
     };
   }
@@ -146,6 +150,39 @@ export class EonOneService {
           path: args?.path || '',
         })
       }
+
+      case `hpcApply`: {
+        let args = <CmdToParam['hpcApply']>arg;
+
+        return RaidCliAPI.hpcApply(cmd, {
+          plugins: args?.plugins || "hpc-ui:v1.0.1",
+          service: args?.service || "enable",
+          deviceId: args?.deviceId || this.deviceId,
+          projectName: '',
+          folder: args?.folder,
+          homeFolder: args?.homeFolder,
+          appFolder: args?.appFolder,
+        })
+      }
+      case `hpcRemove`: {
+        let args = <CmdToParam['hpcRemove']>arg;
+
+        return RaidCliAPI.hpcRemove(cmd, {
+          deviceId: args?.deviceId || this.deviceId,
+        })
+      }
+      case `fssK8sCsiExStorageMount`: {
+        let args = <CmdToParam['fssK8sCsiExStorageMount']>arg;
+
+        return RaidCliAPI.fssK8sCsiExStorageMount(cmd, {
+          s: args?.s,
+          i: args?.i,
+          t: args?.t,
+          d: args?.d,
+          c: args?.c,
+        })
+      }
+
       default:
         cmd.param = arg;
     }
@@ -169,7 +206,7 @@ export class EonOneService {
         name: JOB_ID,
         namespace: 'default'
       }
-    };
+    };    
   }
 
   public async executeJob(cmdArray: Array<RaidCliCmd>): Promise<boolean> {
@@ -209,23 +246,24 @@ export class EonOneService {
     }
   }
 
-  private async sendCmd(jobId: string) {
+  private async sendCmd(id: string) {
     try {
       const requestOptions = {
-        url: `meta/proxy/http:/${this.scmgmtIP}:8816/eonkube/cmd/${jobId}`,
+        url: `meta/proxy/http:/${this.scmgmtIP}:8816/eonkube/cmd/${id}`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       };
 
       const response = await this.$store.dispatch('management/request', requestOptions);
       const data = await response;
-
+      this.deleteConfigMap(id);
       return data?.data?.[0];
     } catch (e) {
+      this.deleteConfigMap(id);
       return false;
     }
   }
-
+  
   private async sendJob(id: string) {
     try {
       const requestOptions = {
@@ -242,6 +280,21 @@ export class EonOneService {
     } catch (e) {
       return false;
     }
+  }
+
+  private async deleteConfigMap(id: string) {
+    const requestOptions = {
+      url: `v1/configmaps/${configmapInNamespace}/${id}`,
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/yaml' },
+    };
+    const response = await this.$store.dispatch('management/request', requestOptions);
+    const data = await response;
+
+    if (data.access_token !== undefined && data.access_token !== null && data.access_token !== '') {
+      return true;
+    }
+    return false;
   }
 }
 function createResourceYaml(modifiers: any) {

@@ -1016,3 +1016,8 @@ export interface hpcApplyParam {
 export interface hpcRemoveParam {
   deviceId: string;
 }
+
+export interface vcctlParam {
+  name: string;
+  namespace: string;
+}
