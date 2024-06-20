@@ -2474,6 +2474,10 @@ export class RaidCliAPI {
   static fssK8sCsiExStorageGet(raidCliCmd: RaidCliCmd): RaidCliCmd {
     return easyRaidCmd('fssK8sCsiExStorageGet', raidCliCmd, {});
   }
+  // FSS k8s csi exstorage mount [-s:s] [-i:i] [-t:t] [-d:d] 
+  static fssK8sCsiExStorageGet(raidCliCmd: RaidCliCmd): RaidCliCmd {
+    return easyRaidCmd('fssK8sCsiExStorageGet', raidCliCmd, {});
+  }
 
   // FSS folder attr set [slot] [-p:p] [-e:e] [-t:t] [-c:c] [-d:d] [-o:o] [-m:m]
   static fssFolderAttrSet(raidCliCmd: RaidCliCmd, param: fssCmd.FolderAttrSetParam): RaidCliCmd {
@@ -2669,7 +2673,7 @@ export class RaidCliAPI {
     return easyRaidCmd('k8sApiNodeSetScmgmtIp', raidCliCmd, param);
   }
 
-    // hpc config get
+  // hpc config get
   static hpcGet(raidCliCmd: RaidCliCmd): RaidCliCmd {
     return easyRaidCmd('hpcGet', raidCliCmd, null);
   }

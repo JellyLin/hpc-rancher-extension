@@ -24,7 +24,7 @@ const configmapInNamespace = `autotest-eonkube-job`;
 // use Connie API
 function getEonOneIp(store: any) {
   const inStore = store.getters['currentProduct'].inStore;
-  const allNodes = store.getters[`${ inStore }/all`](NODE);
+  const allNodes = store.getters[`${inStore}/all`](NODE);
   const headNode = allNodes.filter((n: { metadata: { labels: { [x: string]: any; }; }; }) => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
   const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
 
@@ -96,7 +96,6 @@ export class EonOneService {
   private createCmdYaml(raidCLiCmd: RaidCliCmd, JOB_ID: string): object {
     // const key = raidCLiCmd.key;
     const data = raidCLiCmd.param || {};
-
     data.cmdKey = raidCLiCmd.key;
 
     // const dataStr = JSON.stringify(data);
@@ -151,6 +150,7 @@ export class EonOneService {
           path: args?.path || '',
         })
       }
+
       case `hpcApply`: {
         let args = <CmdToParam['hpcApply']>arg;
 
@@ -182,6 +182,7 @@ export class EonOneService {
           c: args?.c,
         })
       }
+
       default:
         cmd.param = arg;
     }
@@ -205,7 +206,7 @@ export class EonOneService {
         name: JOB_ID,
         namespace: 'default'
       }
-    };
+    };    
   }
 
   public async executeJob(cmdArray: Array<RaidCliCmd>): Promise<boolean> {
@@ -245,10 +246,10 @@ export class EonOneService {
     }
   }
 
-  private async sendCmd(id: string) {
+  private async sendCmd(jobId: string) {
     try {
       const requestOptions = {
-        url: `meta/proxy/http:/${this.scmgmtIP}:8816/eonkube/cmd/${id}`,
+        url: `meta/proxy/http:/${this.scmgmtIP}:8816/eonkube/cmd/${jobId}`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       };
@@ -262,7 +263,7 @@ export class EonOneService {
       return false;
     }
   }
-
+  
   private async sendJob(id: string) {
     try {
       const requestOptions = {
