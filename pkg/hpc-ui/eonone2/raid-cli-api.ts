@@ -2452,6 +2452,29 @@ export class RaidCliAPI {
     });
   }
 
+  // FSS k8s csi exstorage mount [-s:s] [-i:i] [-d:d] [-t:t]
+  /*
+  #  <-s shared_path> (seperated with ' ')
+  #  <-i exstorage_ip>
+  #  <-d exstorage_id>
+  #  <-t model_type>
+  */
+  static fssK8sCsiExStorageMount(raidCliCmd: RaidCliCmd, param: fssCmd.FssK8sCsiExStorageMountParam): RaidCliCmd {
+    return easyRaidCmd('fssK8sCsiExStorageMount', raidCliCmd, param);
+  }
+  // FSS k8s csi exstorage umount [-s:s] [-d:d] 
+  static fssK8sCsiExStorageUnmount(raidCliCmd: RaidCliCmd, param: fssCmd.FssK8sCsiExStorageUnmountParam): RaidCliCmd {
+    return easyRaidCmd('fssK8sCsiExStorageUnmount', raidCliCmd, param);
+  }
+  // FSS k8s csi exstorage status [-s:s] [-d:d] 
+  static fssK8sCsiExStorageStatus(raidCliCmd: RaidCliCmd, param: fssCmd.FssK8sCsiExStorageStatusParam): RaidCliCmd {
+    return easyRaidCmd('fssK8sCsiExStorageStatus', raidCliCmd, param);
+  }
+  // FSS k8s csi exstorage get
+  static fssK8sCsiExStorageGet(raidCliCmd: RaidCliCmd): RaidCliCmd {
+    return easyRaidCmd('fssK8sCsiExStorageGet', raidCliCmd, {});
+  }
+
   // FSS folder attr set [slot] [-p:p] [-e:e] [-t:t] [-c:c] [-d:d] [-o:o] [-m:m]
   static fssFolderAttrSet(raidCliCmd: RaidCliCmd, param: fssCmd.FolderAttrSetParam): RaidCliCmd {
     return easyRaidCmd('fssFolderAttrSet', raidCliCmd, param);
@@ -2646,9 +2669,29 @@ export class RaidCliAPI {
     return easyRaidCmd('k8sApiNodeSetScmgmtIp', raidCliCmd, param);
   }
 
+    // hpc config get
+  static hpcGet(raidCliCmd: RaidCliCmd): RaidCliCmd {
+    return easyRaidCmd('hpcGet', raidCliCmd, null);
+  }
+
+  static hpcApply(raidCliCmd: RaidCliCmd, param: fssCmd.hpcApplyParam): RaidCliCmd {
+    return easyRaidCmd('hpcApply', raidCliCmd, param);
+  }
+
+  static hpcRemove(raidCliCmd: RaidCliCmd, param: fssCmd.hpcApplyParam): RaidCliCmd {
+    return easyRaidCmd('hpcRemove', raidCliCmd, param);
+  }
+
   // openFileExplorer restful
   static openFileExplorer(raidCliCmd: RaidCliCmd, param: fssCmd.openFileExplorerParam): RaidCliCmd {
     return easyRaidCmd('openFileExplorer', raidCliCmd, param);
+  }
+
+  static vcctlPause(raidCliCmd: RaidCliCmd, param: fssCmd.vcctlParam): RaidCliCmd {
+    return easyRaidCmd(`vcctlPause`, raidCliCmd, param);
+  }
+  static vcctlResume(raidCliCmd: RaidCliCmd, param: fssCmd.vcctlParam): RaidCliCmd {
+    return easyRaidCmd(`vcctlResume`, raidCliCmd, param);
   }
 
   /****************
@@ -2871,7 +2914,7 @@ export class RaidCliAPI {
   event table example:
       840F815D=New JBOD enclosure #{0}# is added to node #{1}#.$2${0}$%s${1}$%s$|
   */
-  static emitSWEvent(devID: string, refReturn: any, refParam: any, params: any, callback: any): any {
+  static emitSWEvent(devID: string, refReturn: any, refParam: any, params: any, callback?: any): any {
     const eventId = params.eventId;
     const eventType = params.eventType || '7F';
     const eventSeverity = params.eventSeverity || 1;

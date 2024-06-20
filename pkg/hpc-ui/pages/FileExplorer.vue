@@ -12,17 +12,6 @@ export const NODE_ROLES = {
   SCMGMT_IP:         'node-role.cluster/scmgmt-ip',
 };
 
-// use Connie API
-function getEonOneIp(store) {
-  const inStore = store.getters['currentProduct'].inStore;
-  const allNodes = store.getters[`${ inStore }/all`](NODE);
-  const headNode = allNodes.filter(n => n.metadata.labels[NODE_ROLES.HEAD_NODE]);
-  const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
-
-  return (scmgmtIP !== '') ? scmgmtIP : '172.27.118.101';
-  // return (scmgmtIP !== '') ? scmgmtIP : '172.27.12.113';
-}
-
 export default {
   name:       'FileExplorer',
   components: {},
@@ -47,7 +36,8 @@ export default {
     const inStore = this.$store.getters['currentProduct'].inStore;
 
     if (this.$store.getters[`${ inStore }/schemaFor`](NODE)) {
-      this.scmgmtIP = await getEonOneIp(this.$store);
+      await this.$store.dispatch(`${ inStore }/findAll`, { type: NODE });
+      // this.scmgmtIP = getEonOneIp(this.$store);
     }
     this.EonOneJobAPI = new EonOneService(undefined, this.$store);
     // this.EonOneJobAPI = new EonOneService(this.scmgmtIP, this.$store);
