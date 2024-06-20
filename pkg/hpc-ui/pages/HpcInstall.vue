@@ -620,19 +620,19 @@ export default {
     upload() {
       // TODO Ryder
       console.log(`open file explorer`);
-      const enable = this.EonOneJobAPI.getCmdParam(`enableExplorer`, {});
-      const jobArr = [enable];
-      const jobArrStr = JSON.stringify(jobArr);
-      const cc = this.EonOneJobAPI.getCmdParam(`remoteCmd`, {
-        ip: `172.26.112.113`,
-        uid: `465CC`,
-        jobArr: jobArrStr,
-      });
-      const response = this.EonOneJobAPI.executeCmd(cc);
+      // const enable = this.EonOneJobAPI.getCmdParam(`enableExplorer`, {});
+      // const jobArr = [enable];
+      // const jobArrStr = JSON.stringify(jobArr);
+      // const cc = this.EonOneJobAPI.getCmdParam(`remoteCmd`, {
+      //   ip: `172.26.112.113`,
+      //   uid: `465CC`,
+      //   jobArr: jobArrStr,
+      // });
+      // const response = this.EonOneJobAPI.executeCmd(cc);
 
-      response.then((data) => {
-        console.log(data);
-      });
+      // response.then((data) => {
+      //   console.log(data);
+      // });
     },
     async submit() {
       this.applyValue();
