@@ -101,6 +101,6 @@ export function init($plugin: IPlugin, store: any) {
     CUSTOM_PAGE_NAME_2,
     // CUSTOM_PAGE_NAME_3,
     // CUSTOM_PAGE_NAME_4,
-    CUSTOM_PAGE_NAME_5
+    // CUSTOM_PAGE_NAME_5
   ]);
 }
