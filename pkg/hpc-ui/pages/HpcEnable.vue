@@ -121,27 +121,16 @@ export default {
   },
   methods: {
     testMethod() {
-      console.log(`test`);
       window.location.href = window.location.href.replace(/\/[^\/]*$/, '/batch.volcano.sh.job');
     },
     pressNextButton() {
       if (this.getButtonLabel === `Next` && this.hpcEnable && this.selectedHpcStorage && this.currentPage == 'enableHPCPage') {
-        console.log(`Next`);
-        console.log(`selectedHpcStorage: ${this.selectedHpcStorage}`);
         this.showExternalStorage();
         this.currentPage = 'infoPage';
       } else if (this.currentPage == 'infoPage' && this.hpcEnable ) {
-        console.log(`infoPage`);
         this.currentPage = 'installPackagePage';
       } else if (this.currentPage == 'installPackagePage' && this.hpcEnable && this.selectedVersion) {
-        console.log(`installPackagePage`);
-        console.log(`selectedVersion: ${this.selectedVersion}`);
-        
         this.enableHPC();
-
-      } 
-      else {
-        console.log(`Create`);
       }
     },
     pressPreviousButton() {
@@ -153,12 +142,6 @@ export default {
     },
     selectSharedFolders(selected) {
       this.selectSharedFolder = selected;
-      console.log("--------------------");
-      selected.forEach((item) => {
-        console.log(item.sharedFolder);
-        console.log(item.fileSystem);
-        console.log(item.size);
-      });
     },
     async isHpcEnable() {
       const inStore = this.$store.getters['currentProduct'].inStore;
@@ -185,9 +168,7 @@ export default {
       };
       const cmd = this.eonOneService.getCmdParam(`showExternalStorage`, args);
       const result = await this.eonOneService.executeCmd(cmd);
-      console.log(result);
       this.externalStorageData = result;
-      console.log(this.externalStorageData);
 
       const allFolderList = this.externalStorageData['fsPagelistFolder'];
       const fsShareStatusList = this.externalStorageData['fsShareStatus'];
@@ -233,10 +214,8 @@ export default {
       };
       let cmd = this.eonOneService.getCmdParam(`fssK8sCsiExStorageMount`, args);
       let result = await this.eonOneService.executeCmd(cmd);
-      console.log(result);
-      
+
       const mount_path = result[sharePath].mount_path;
-      console.log(mount_path);
       if (mount_path) {
         args = {
           plugins: "hpc-ui:v" + this.selectedVersion,
@@ -249,7 +228,6 @@ export default {
         };
         cmd = this.eonOneService.getCmdParam(`hpcApply`, args);
         let result2 = await this.eonOneService.executeCmd(cmd);
-        console.log(result2);
         this.pageLoading = false;
       }
       
@@ -271,18 +249,6 @@ export default {
     this.eonOneService = new EonOneService('172.27.118.101', this.$store);
   },
   watch: {
-    hpcEnable: {
-      handler: function (val) {
-        console.log(`hpcEnable: ${val}`);
-      },
-      immediate: true,
-    },
-    selectedHpcStorage: {
-      handler: function (val) {
-        console.log(`selectedHpcStorage: ${val}`);
-      },
-      immediate: true,
-    },
   },
 };
 </script>
