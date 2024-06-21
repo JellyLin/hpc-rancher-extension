@@ -19,3 +19,8 @@ hpc:
     title: File Explorer
   settings:
     title: Settings
+  install:
+    title: Install
+  enable:
+    title: Enable
+
