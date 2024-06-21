@@ -11,6 +11,7 @@ export function init($plugin: IPlugin, store: any) {
   const CUSTOM_PAGE_NAME_3 = 'Summary';
   const CUSTOM_PAGE_NAME_4 = 'Settings';
   const CUSTOM_PAGE_NAME_5 = 'Install';
+  const CUSTOM_PAGE_NAME_6 = 'Enable';
 
   const {
     product,
@@ -86,11 +87,20 @@ export function init($plugin: IPlugin, store: any) {
     }
   });
   virtualType({
-    labelKey: 'hpc.install',
+    labelKey: 'hpc.install.title',
     name:     CUSTOM_PAGE_NAME_5,
     weight:   9.5,
     route:    {
       name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_5 }`,
+      params: { product: YOUR_PRODUCT_NAME }
+    }
+  });
+  virtualType({
+    labelKey: 'hpc.enable.title',
+    name:     CUSTOM_PAGE_NAME_6,
+    weight:   9.4,
+    route:    {
+      name:   `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_6 }`,
       params: { product: YOUR_PRODUCT_NAME }
     }
   });
@@ -100,7 +110,8 @@ export function init($plugin: IPlugin, store: any) {
     CUSTOM_PAGE_NAME,
     CUSTOM_PAGE_NAME_2,
     // CUSTOM_PAGE_NAME_3,
-    // CUSTOM_PAGE_NAME_4,
-    // CUSTOM_PAGE_NAME_5
+    CUSTOM_PAGE_NAME_4,
+    CUSTOM_PAGE_NAME_5,
+    CUSTOM_PAGE_NAME_6
   ]);
 }

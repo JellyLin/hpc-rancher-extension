@@ -19,3 +19,32 @@ hpc:
     title: File Explorer
   settings:
     title: Settings
+  submit:
+    title: Submit
+    cpu:
+      worker: CPU worker
+      master: CPU master
+      total: CPU
+    gpu:
+      worker: GPU worker
+      master: GPU master
+      total: GPU
+    memory:
+      worker: Memory worker
+      master: Memory master
+      total: Memory
+    upload: Upload
+    data:
+      input: Input File
+      process: Post Processing
+    node: Nodes
+    command: Command
+    job:
+      name: Job Name
+      namespace: Namespace
+      version: App Version
+  install:
+    title: Install
+  enable:
+    title: Enable
+

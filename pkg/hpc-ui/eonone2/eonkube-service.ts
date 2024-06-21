@@ -1,12 +1,12 @@
 // import { v1 as uuidv1 } from 'uuid';
 import { Store } from 'vuex';
-import { NODE } from '@shell/config/types';
+import { NODE, CONFIG_MAP } from '@shell/config/types';
 // import { fetchOrCreateSetting } from '@shell/utils/settings';
 import { createYamlWithOptions } from '@shell/utils/create-yaml';
 import { RaidCliCmd } from './interface/raid-cli-cmd';
 import { RaidCliAPI } from './raid-cli-api';
-import { showExternalStorageParam } from './interface/cmd-param-raid';
-import { hpcApplyParam, hpcRemoveParam, openFileExplorerParam, FssK8sCsiExStorageMountParam, vcctlParam } from './interface/cmd-param-fss';
+import { remoteSendJobsParam, shellMkdirParam, showExternalStorageParam } from './interface/cmd-param-raid';
+import { hpcApplyParam, hpcRemoveParam, openFileExplorerParam, FssK8sCsiExStorageMountParam, vcctlParam, FssExplorerStartParam } from './interface/cmd-param-fss';
 // import { stringify } from '@shell/utils/error';
 // import Resource from '@shell/plugins/dashboard-store/resource-class';
 
@@ -19,7 +19,7 @@ export const NODE_ROLES = {
   SCMGMT_IP: 'node-role.cluster/scmgmt-ip',
 };
 
-const configmapInNamespace = `autotest-eonkube-job`;
+const configmapInNamespace = `default`;
 
 // use Connie API
 function getEonOneIp(store: any) {
@@ -39,7 +39,7 @@ function getEonOneDevId(store: any) {
   // const scmgmtIP = headNode[0]?.metadata?.annotations[NODE_ROLES.SCMGMT_IP];
   // configmap/externalstorageIP
 
-  return '8DCC1C';
+  return '8D6785';
 }
 
 type SelectPartial<T, K extends keyof T | (keyof T)[]> =
@@ -57,20 +57,70 @@ interface CmdToParam {
   fssK8sCsiExStorageMount: FssK8sCsiExStorageMountParam;
   vcctlResume: vcctlParam;
   vcctlPause: vcctlParam;
+  fssExplorerStart: FssExplorerStartParam;
+  remoteSendJobs: SelectPartial<remoteSendJobsParam, [`uid`]>;
+  shellMkdir: shellMkdirParam;
 }
 
 type CmdKey = keyof CmdToParam;
+
+interface workspace {
+  deviceId: string;
+  projectName: string;
+  folder: string;
+  homeFolder: string;
+  appFolder: string;
+}
+
+export class HpcConfig {
+  private _plugins: Array<string>;
+  private _service: object;
+  private _workspace: Array<workspace>;
+
+  constructor(cm: any) {
+    this._plugins = cm.plugins;
+    this._service = JSON.parse(cm.service);
+    this._workspace = JSON.parse(cm.workspace);
+  }
+
+  public get plugins(): Array<string> {
+    return this._plugins;
+  }
+
+  public get service(): object {
+    return this._service;
+  }
+
+  public get workspace(): Array<object> {
+    return this._workspace;
+  }
+
+  public getHome(devId: string): string {
+    const h = this._workspace.find(w => w.deviceId === devId)?.homeFolder;
+    return h ? h : ``;
+  }
+}
+
 
 export class EonOneService {
   private $store!: Store<any>;
   private scmgmtIP!: string;
   private deviceId!: string;
+  private hpcConfig!: HpcConfig;
+  private namespace: string;
   public executeCmd = this._executeCmd;
 
   constructor(scmgmtIP?: string, store?: Store<any>) {
     if (store !== undefined) {
       this.$store = store;
       this.deviceId = getEonOneDevId(this.$store);
+      const principal = this.$store.getters["rancher/byId"](
+        "principal",
+        this.$store.getters["auth/principalId"]
+      );
+      this.namespace = principal.id.split(`//`)[1] || configmapInNamespace;
+    } else {
+      this.namespace = configmapInNamespace;
     }
     if (scmgmtIP !== undefined) {
       this.scmgmtIP = scmgmtIP;
@@ -96,6 +146,7 @@ export class EonOneService {
   private createCmdYaml(raidCLiCmd: RaidCliCmd, JOB_ID: string): object {
     // const key = raidCLiCmd.key;
     const data = raidCLiCmd.param || {};
+
     data.cmdKey = raidCLiCmd.key;
 
     // const dataStr = JSON.stringify(data);
@@ -106,7 +157,7 @@ export class EonOneService {
       kind: 'ConfigMap',
       metadata: {
         name: JOB_ID,
-        namespace: configmapInNamespace
+        namespace: this.namespace
       }
     };
   }
@@ -150,15 +201,14 @@ export class EonOneService {
           path: args?.path || '',
         })
       }
-
       case `hpcApply`: {
         let args = <CmdToParam['hpcApply']>arg;
 
         return RaidCliAPI.hpcApply(cmd, {
-          plugins: args?.plugins || "hpc-ui:v1.0.1",
+          plugins: args?.plugins,
           service: args?.service || "enable",
           deviceId: args?.deviceId || this.deviceId,
-          projectName: '',
+          projectName: args?.projectName,
           folder: args?.folder,
           homeFolder: args?.homeFolder,
           appFolder: args?.appFolder,
@@ -171,18 +221,13 @@ export class EonOneService {
           deviceId: args?.deviceId || this.deviceId,
         })
       }
-      case `fssK8sCsiExStorageMount`: {
-        let args = <CmdToParam['fssK8sCsiExStorageMount']>arg;
-
-        return RaidCliAPI.fssK8sCsiExStorageMount(cmd, {
-          s: args?.s,
-          i: args?.i,
-          t: args?.t,
-          d: args?.d,
-          c: args?.c,
+      case `remoteSendJobs`:
+        let args = <CmdToParam[`remoteSendJobs`]>arg;
+        return RaidCliAPI.remoteSendJobs(cmd, {
+          ip: args?.ip,
+          uid: args?.uid || this.deviceId,
+          jobArr: args.jobArr,
         })
-      }
-
       default:
         cmd.param = arg;
     }
@@ -204,9 +249,9 @@ export class EonOneService {
       kind: 'ConfigMap',
       metadata: {
         name: JOB_ID,
-        namespace: 'default'
+        namespace: this.namespace
       }
-    };    
+    };
   }
 
   public async executeJob(cmdArray: Array<RaidCliCmd>): Promise<boolean> {
@@ -259,11 +304,12 @@ export class EonOneService {
       this.deleteConfigMap(id);
       return data?.data?.[0];
     } catch (e) {
+      console.error(e);
       this.deleteConfigMap(id);
       return false;
     }
   }
-  
+
   private async sendJob(id: string) {
     try {
       const requestOptions = {
@@ -273,30 +319,43 @@ export class EonOneService {
       };
       const response = await this.$store.dispatch('management/request', requestOptions);
       const data = await response;
-      if (data.access_token !== undefined && data.access_token !== null && data.access_token !== '') {
-        return true;
-      }
-      return false;
+      this.deleteConfigMap(id);
+      return data?.data?.[0];
     } catch (e) {
+      this.deleteConfigMap(id);
       return false;
     }
   }
 
   private async deleteConfigMap(id: string) {
     const requestOptions = {
-      url: `v1/configmaps/${configmapInNamespace}/${id}`,
+      url: `v1/configmaps/${this.namespace}/${id}`,
       method: 'DELETE',
       headers: { 'Content-Type': 'application/yaml' },
     };
-    const response = await this.$store.dispatch('management/request', requestOptions);
-    const data = await response;
+    try {
+      const response = await this.$store.dispatch('management/request', requestOptions);
+      const data = await response;
 
-    if (data.access_token !== undefined && data.access_token !== null && data.access_token !== '') {
-      return true;
+      if (data.access_token !== undefined && data.access_token !== null && data.access_token !== '') {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
-    return false;
+  }
+
+  public async getHpcConfig(getAgain?: boolean): Promise<HpcConfig> {
+    if (!this.hpcConfig || getAgain) {
+      const cm = await this.$store.dispatch('cluster/find', { type: CONFIG_MAP, id: `default/hpc` });
+      this.hpcConfig = new HpcConfig(cm?.data);
+    }
+    return this.hpcConfig;
   }
 }
+
 function createResourceYaml(modifiers: any) {
   throw new Error('Function not implemented.');
 }

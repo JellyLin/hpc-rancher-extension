@@ -1061,3 +1061,13 @@ export interface k8sApiKubectlEditConfigmapParam{
   configmapName: string;
   storageList: string;
 }
+
+export interface remoteSendJobsParam{
+  ip: string;
+  uid: string;
+  jobArr: string;
+}
+
+export interface shellMkdirParam {
+  folder: string;
+}
