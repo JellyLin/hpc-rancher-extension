@@ -7,7 +7,7 @@ import Select from "@shell/components/form/Select.vue";
 import Mount from "@shell/edit/workload/storage/Mount";
 import TextAreaAutoGrow from "@components/Form/TextArea/TextAreaAutoGrow.vue";
 import { mapGetters } from "vuex";
-import removeObject from "@shell/utils/array";
+import { removeObject } from "@shell/utils/array";
 import ChartMixin from "@shell/mixins/chart";
 import { clone, diff, get, set } from "@shell/utils/object";
 import { LINUX, WINDOWS } from "@shell/store/catalog";
@@ -16,7 +16,6 @@ import {
   CATALOG,
   MANAGEMENT,
   DEFAULT_WORKSPACE,
-  CAPI,
 } from "@shell/config/types";
 import {
   FROM_CLUSTER,
@@ -106,8 +105,10 @@ export default {
     };
 
     return {
+      hpcConfig: null,
+      homeFolder: ``,
       userInfo,
-      EonOneJobAPI: null,
+      EonOneService: null,
       isTotalMode: false,
       model: submitOpts,
       namespaceList: [],
@@ -428,7 +429,21 @@ export default {
 
     // NOTE UI template
     try {
-      this.EonOneJobAPI = new EonOneService(`172.27.118.101`, this.$store);
+      this.EonOneService = new EonOneService(`172.27.118.101`, this.$store);
+      this.hpcConfig = await this.EonOneService.getHpcConfig();
+      console.log(this.hpcConfig);
+      const uuid = crypto.randomUUID();
+      this.homeFolder = `${this.hpcConfig.getHome(`465CC`)}/${
+        this.userInfo.uid
+      }/${uuid}`;
+      const createImportData = this.EonOneService.getCmdParam(`shellMkdir`, {
+        folder: `${this.homeFolder}/ImportData`,
+      });
+      const createExportData = this.EonOneService.getCmdParam(`shellMkdir`, {
+        folder: `${this.homeFolder}/ExportData`,
+      });
+      await this.EonOneService.executeJob([createImportData, createExportData]);
+
       if (this.versionInfo?.questions) {
         this.isTotalMode = !this.versionInfo.questions.questions.some((q) =>
           NOT_TOTAL_MODE.includes(q.label)
@@ -439,6 +454,7 @@ export default {
             let result = this.versionInfo.values;
 
             for (const key of keys) {
+              if (!isNaN(key)) break;
               result = result[key];
             }
             this.setValueByLabel(q.label, result);
@@ -482,7 +498,7 @@ export default {
       return [
         {
           mountPath: `/`,
-          subPath: `/`,
+          subPath: this.homeFolder,
         },
       ];
     },
@@ -526,7 +542,7 @@ export default {
 
       return result;
     },
-    applyValue() {
+    applyValue(flexVolume) {
       this.chartValues = clone(this.versionInfo?.values || {});
       this.versionInfo.questions.questions.forEach((q) => {
         const variableList = this.formatVariable(q.variable);
@@ -537,12 +553,26 @@ export default {
             nested[variableList[i]] =
               this.getValueByLabel(q.label) || nested[variableList[i]];
             break;
+          // } else if (i + 1 < variableList.length && !isNaN(variableList[i+1])) {
+          //   nested[variableList[i]] = this.getValueByLabel(q.label) || nested;
+          //   break;
           } else if (!nested.hasOwnProperty(variableList[i])) {
             nested[variableList[i]] = {};
           }
           nested = nested[variableList[i]];
         }
       });
+      if (flexVolume && this.volumeMounts.length > 0) {
+        this.chartValues.volume = [];
+        this.volumeMounts.forEach(val => {
+          const jobid = this.getRandomInt(0, 100);
+          this.chartValues.volume.push({
+            jobid,
+            source: val.subPath,
+            key: `${this.encode(val.subPath)}${this.encode(jobid)}`,
+          });
+        });
+      }
     },
     getValueByLabel(label) {
       switch (label) {
@@ -572,6 +602,12 @@ export default {
           return this.model.memory.worker;
         case `memoryMaster`:
           return this.model.memory.master;
+        // case `mountPath`:
+        //   const mountPathArr = [];
+        //   this.volumeMounts.forEach(val => {
+        //     mountPathArr.push({mountPath: val.mountPath, name: ``});
+        //   });
+        //   return mountPathArr;
       }
     },
     setValueByLabel(label, value) {
@@ -615,27 +651,65 @@ export default {
         case `memoryMaster`:
           this.model.memory.master = value;
           break;
+        case `mountPath`:
+          console.log(this.volumeMounts);
+          value.forEach((val, idx) => {
+            if (idx + 1 > this.volumeMounts.length) {
+              this.volumeMounts.push({
+                mountPath: val.mountPath,
+                subPath: `/`,
+              });
+            } else {
+              this.volumeMounts[idx].mountPath = val.mountPath;
+            }
+          });
+          break;
       }
+    },
+    encode(source) {
+      let e_source = btoa(unescape(encodeURIComponent(source)));
+      let key = "";
+      let pair = "";
+
+      for (let x of e_source) {
+        pair += x;
+        if (pair.length === 3) {
+          key = pair + key;
+          pair = "";
+        }
+      }
+
+      // NOTE remove prefix =
+      return (pair + key).replace(new RegExp("^=+"), "");
+    },
+    getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
     },
     upload() {
       // TODO Ryder
       console.log(`open file explorer`);
-      // const enable = this.EonOneJobAPI.getCmdParam(`enableExplorer`, {});
-      // const jobArr = [enable];
-      // const jobArrStr = JSON.stringify(jobArr);
-      // const cc = this.EonOneJobAPI.getCmdParam(`remoteCmd`, {
-      //   ip: `172.26.112.113`,
-      //   uid: `465CC`,
-      //   jobArr: jobArrStr,
-      // });
-      // const response = this.EonOneJobAPI.executeCmd(cc);
+      const enable = this.EonOneService.getCmdParam(
+        `fssExplorerStart`,
+        {},
+        { key: `fssExplorerStart`, devID: `465CC`, refParam: {}, refReturn: {} }
+      );
+      const jobArr = [enable];
+      const jobArrStr = JSON.stringify(jobArr);
+      const cc = this.EonOneService.getCmdParam(`remoteSendJobs`, {
+        ip: `172.26.112.113`,
+        uid: `465CC`,
+        jobArr: jobArrStr,
+      });
+      const response = this.EonOneService.executeCmd(cc);
 
-      // response.then((data) => {
-      //   console.log(data);
-      // });
+      response.then((data) => {
+        console.log(data);
+      });
     },
     async submit() {
-      this.applyValue();
+      this.applyValue(false);
       // TODO According this.versionInfo.questions.questions[] value to filter / select to assing value.yaml
       // input is payload
       // copy from finish func
@@ -668,7 +742,7 @@ export default {
       console.log(this.versionInfo);
       console.log(`=================================`);
       console.log(`chartValue`);
-      this.applyValue();
+      this.applyValue(false);
       console.log(this.chartValues);
       console.log(`=================================`);
       // user
@@ -955,10 +1029,10 @@ export default {
 
       return { errors, input: out };
     },
-    remove(volMount) {
+    removeMount(volMount) {
       removeObject(this.volumeMounts, volMount);
     },
-    add() {
+    addMount() {
       console.log(this);
       this.volumeMounts.push({ mountPath: ``, subPath: `` });
     },
@@ -972,10 +1046,10 @@ export default {
 <template>
   <Loading v-if="$fetchState.pending" />
   <div v-else>
-    <h1>Install</h1>
+    <h1>{{ t(`hpc.submit.title`) }}</h1>
     <div class="mb-20">
       <div>
-        <p>{{ t(`job.name`) }}</p>
+        <p>{{ t(`hpc.submit.job.name`) }}</p>
       </div>
       <div class="col span-3">
         <LabeledInput v-model="model.name" />
@@ -984,10 +1058,10 @@ export default {
     <div class="mb-20">
       <div class="row">
         <p class="col span-3">
-          {{ t(`namespace`) }}
+          {{ t(`hpc.submit.job.namespace`) }}
         </p>
         <p class="col span-3">
-          {{ t(`app.version`) }}
+          {{ t(`hpc.submit.job.version`) }}
         </p>
       </div>
       <div class="row">
@@ -1007,10 +1081,10 @@ export default {
       <div class="mb-20">
         <div class="row">
           <p class="col span-3">
-            {{ t(`cpu`) }}
+            {{ t(`hpc.submit.cpu.total`) }}
           </p>
           <p class="col span-3">
-            {{ t(`memory`) }}
+            {{ t(`hpc.submit.memory.total`) }}
           </p>
         </div>
         <div class="row">
@@ -1038,10 +1112,10 @@ export default {
       <div class="mb-20">
         <div class="row">
           <p class="col span-3">
-            {{ t(`gpu`) }}
+            {{ t(`hpc.submit.gpu.total`) }}
           </p>
           <p class="col span-3">
-            {{ t(`node`) }}
+            {{ t(`hpc.submit.node`) }}
           </p>
         </div>
         <div class="row">
@@ -1070,10 +1144,10 @@ export default {
       <div class="mb-20">
         <div class="row">
           <p class="col span-3">
-            {{ t(`cpu.master`) }}
+            {{ t(`hpc.submit.cpu.master`) }}
           </p>
           <p class="col span-3">
-            {{ t(`cpu.worker`) }}
+            {{ t(`hpc.submit.cpu.worker`) }}
           </p>
         </div>
         <div class="row">
@@ -1100,10 +1174,10 @@ export default {
       <div class="mb-20">
         <div class="row">
           <p class="col span-3">
-            {{ t(`gpu.master`) }}
+            {{ t(`hpc.submit.gpu.master`) }}
           </p>
           <p class="col span-3">
-            {{ t(`gpu.worker`) }}
+            {{ t(`hpc.submit.gpu.worker`) }}
           </p>
         </div>
         <div class="row">
@@ -1129,9 +1203,9 @@ export default {
       </div>
       <div class="mb-20">
         <div class="row">
-          <p class="col span-3">{{ t(`memory.master`) }}r</p>
+          <p class="col span-3">{{ t(`hpc.submit.memory.master`) }}r</p>
           <p class="col span-3">
-            {{ t(`memory.worker`) }}
+            {{ t(`hpc.submit.memory.worker`) }}
           </p>
         </div>
         <div class="row">
@@ -1160,7 +1234,7 @@ export default {
       <div class="mb-20">
         <div class="row">
           <p class="col span-3">
-            {{ t(`nodes`) }}
+            {{ t(`hpc.submit.node`) }}
           </p>
         </div>
         <div class="row">
@@ -1196,7 +1270,6 @@ export default {
             :id="`mount-path-${i}`"
             v-model="volumeMount.mountPath"
             :mode="mode"
-            :disabled="i == 0"
           />
         </div>
         <div>
@@ -1212,13 +1285,13 @@ export default {
             id="remove-mount"
             type="button"
             class="btn btn-sm role-link"
-            @click="remove(volumeMount)"
+            @click="removeMount(volumeMount)"
           >
             {{ t("generic.remove") }}
           </button>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <button
           id="add-mount"
           type="button"
@@ -1227,48 +1300,48 @@ export default {
         >
           {{ t("workload.storage.addMount") }}
         </button>
-      </div>
+      </div> -->
     </div>
     <div class="mb-20">
       <div class="row">
         <p class="col span-3">
-          {{ t(`command`) }}
+          {{ t(`hpc.submit.command`) }}
         </p>
       </div>
       <div class="row">
         <div class="col span-6">
-          <TextAreaAutoGrow v-model="model.command" />
+          <LabeledInput v-model="model.command" :type="'multiline'" />
         </div>
       </div>
     </div>
     <div class="mb-20">
       <div class="row">
         <p class="col span-3">
-          {{ t(`input.file`) }}
+          {{ t(`hpc.submit.data.input`) }}
         </p>
       </div>
       <button class="role-tertiary" @click="upload">
-        {{ t(`upload`) }}
+        {{ t(`hpc.submit.upload`) }}
       </button>
     </div>
     <div class="mb-20">
       <div class="row">
         <p class="col span-3">
-          {{ t(`post.processing`) }}
+          {{ t(`hpc.submit.data.process`) }}
         </p>
       </div>
       <button class="role-tertiary" @click="upload">
-        {{ t(`upload`) }}
+        {{ t(`hpc.submit.upload`) }}
       </button>
     </div>
     <div class="mb-20">
       <button class="role-tertiary" @click="submit">
-        {{ t(`submit`) }}
+        {{ t(`hpc.submit.title`) }}
       </button>
     </div>
     <div class="mb-20">
       <button class="role-tertiary" @click="submitConsole">
-        {{ t(`submitOnlyConsole`) }}
+        Console Debug (Ignore this)
       </button>
     </div>
   </div>
