@@ -43,3 +43,8 @@ hpc:
       name: Job Name
       namespace: Namespace
       version: App Version
+  install:
+    title: Install
+  enable:
+    title: Enable
+

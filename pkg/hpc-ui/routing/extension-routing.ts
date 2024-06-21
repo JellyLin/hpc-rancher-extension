@@ -5,6 +5,8 @@ import VolcanoJobTable from '../list/batch.volcano.sh.job.vue';
 import FileExplorer from '../pages/FileExplorer.vue';
 // import HpcAppCenter from '../pages/HpcAppCenter.vue';
 import HpcInstall from '../pages/HpcInstall.vue';
+import HpcEnable from '../pages/HpcEnable.vue';
+import HpcSettings from '../pages/HpcSettings.vue';
 
 // to achieve naming consistency throughout the extension
 // we recommend this to be defined on a config file and exported
@@ -14,6 +16,7 @@ const YOUR_K8S_RESOURCE_NAME = 'batch.volcano.sh.job';
 const CUSTOM_PAGE_NAME_2 = 'FileExplorer';
 const CUSTOM_PAGE_NAME_3 = 'Summary';
 const CUSTOM_PAGE_NAME_4 = 'Settings';
+const CUSTOM_PAGE_NAME_5 = 'Enable';
 
 const routes = [
   {
@@ -49,12 +52,19 @@ const routes = [
   {
     name:      `c-cluster-${ YOUR_PRODUCT_NAME }-${ CUSTOM_PAGE_NAME_4 }`,
     path:      `/c/:cluster/${ YOUR_PRODUCT_NAME }/${ CUSTOM_PAGE_NAME_4 }`,
+    component: HpcSettings,
     meta:      { product: YOUR_PRODUCT_NAME },
   },
   {
     name:       `c-cluster-${YOUR_PRODUCT_NAME}-Install`,
     path:       `/c/:cluster/${YOUR_PRODUCT_NAME}/Install`,
     component:  HpcInstall,
+    meta:       { product: YOUR_PRODUCT_NAME }
+  },
+  {
+    name:       `c-cluster-${YOUR_PRODUCT_NAME}-${ CUSTOM_PAGE_NAME_5 }`,
+    path:       `/c/:cluster/${YOUR_PRODUCT_NAME}/${ CUSTOM_PAGE_NAME_5 }`,
+    component:  HpcEnable,
     meta:       { product: YOUR_PRODUCT_NAME }
   },
 ];
